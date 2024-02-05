@@ -78,77 +78,82 @@ CLUES = [
     ],
 
 ]
-
+default_positions = [
+    # Round 1
+    {
+        'red': (3, 0), 'green': (1, 0), 'blue': (2, 0)
+    }
+]
 
 rounds_correct_positions = [
     # Round 1
     {
-        'red': (2, 3), 'green': (0, 1), 'blue': (1, 2),
-        'yellow': (0, 2), 'orange': (1, 1), 'purple': (2, 0),
-        'pink': (2, 1), 'brown': (0, 3), 'indigo': (1, 0),
-        'grey': (1, 3), 'white': (2, 2), 'violet': (0, 0),
+        'red': (3, 0), 'green': (1, 0), 'blue': (2, 0),
+        'yellow': (0, 1), 'orange': (1, 1), 'purple': (2, 1),
+        'pink': (3, 1), 'brown': (0, 2), 'indigo': (1, 2),
+        'grey': (2, 2), 'white': (3, 2), 'violet': (0, 0),
     },
     # Round 2
     {
-        'red': (1, 3), 'green': (2, 2), 'blue': (0, 1),
-        'yellow': (1, 0), 'orange': (0, 2), 'purple': (1, 1),
-        'pink': (2, 0), 'brown': (0, 0), 'indigo': (2, 1),
-        'grey': (0, 3), 'white': (1, 2), 'violet': (2, 3),
+        'red': (1, 2), 'green': (3, 1), 'blue': (0, 0),
+        'yellow': (1, 0), 'orange': (2, 1), 'purple': (3, 0),
+        'pink': (0, 2), 'brown': (2, 0), 'indigo': (3, 2),
+        'grey': (1, 1), 'white': (2, 2), 'violet': (0, 1),
     },
     # Round 3
     {
-        'red': (0, 2), 'green': (1, 2), 'blue': (2, 2),
-        'yellow': (0, 1), 'orange': (1, 1), 'purple': (2, 1),
-        'pink': (0, 0), 'brown': (1, 0), 'indigo': (2, 0),
-        'grey': (0, 3), 'white': (1, 3), 'violet': (2, 3),
+        'red': (0, 1), 'green': (2, 2), 'blue': (3, 1),
+        'yellow': (0, 2), 'orange': (1, 1), 'purple': (2, 0),
+        'pink': (3, 2), 'brown': (0, 0), 'indigo': (1, 2),
+        'grey': (2, 1), 'white': (3, 0), 'violet': (1, 0),
     },
     # Round 4
     {
-        'red': (1, 1), 'green': (0, 3), 'blue': (2, 3),
-        'yellow': (1, 2), 'orange': (0, 0), 'purple': (2, 0),
-        'pink': (1, 0), 'brown': (0, 2), 'indigo': (2, 1),
-        'grey': (1, 3), 'white': (0, 1), 'violet': (2, 2),
+        'red': (2, 1), 'green': (1, 2), 'blue': (0, 2),
+        'yellow': (3, 1), 'orange': (1, 0), 'purple': (2, 2),
+        'pink': (0, 1), 'brown': (3, 0), 'indigo': (1, 1),
+        'grey': (2, 0), 'white': (0, 0), 'violet': (3, 2),
     },
     # Round 5
     {
-        'red': (2, 1), 'green': (1, 3), 'blue': (0, 0),
-        'yellow': (2, 0), 'orange': (1, 0), 'purple': (0, 1),
-        'pink': (2, 2), 'brown': (1, 2), 'indigo': (0, 2),
-        'grey': (2, 3), 'white': (1, 1), 'violet': (0, 3),
+        'red': (3, 2), 'green': (2, 0), 'blue': (1, 1),
+        'yellow': (0, 0), 'orange': (3, 1), 'purple': (2, 1),
+        'pink': (1, 2), 'brown': (0, 1), 'indigo': (3, 0),
+        'grey': (2, 2), 'white': (1, 0), 'violet': (0, 2),
     },
     # Round 6
     {
-        'red': (1, 2), 'green': (2, 1), 'blue': (0, 3),
-        'yellow': (1, 1), 'orange': (2, 0), 'purple': (0, 2),
-        'pink': (1, 0), 'brown': (2, 2), 'indigo': (0, 0),
-        'grey': (1, 3), 'white': (2, 3), 'violet': (0, 1),
+        'red': (1, 0), 'green': (2, 2), 'blue': (3, 0),
+        'yellow': (0, 2), 'orange': (1, 1), 'purple': (2, 0),
+        'pink': (3, 1), 'brown': (0, 0), 'indigo': (1, 2),
+        'grey': (2, 1), 'white': (3, 2), 'violet': (0, 1),
     },
     # Round 7
     {
-        'red': (0, 1), 'green': (1, 0), 'blue': (2, 2),
-        'yellow': (0, 0), 'orange': (1, 2), 'purple': (2, 3),
-        'pink': (0, 2), 'brown': (1, 1), 'indigo': (2, 0),
-        'grey': (0, 3), 'white': (1, 3), 'violet': (2, 1),
+        'red': (2, 0), 'green': (0, 1), 'blue': (1, 2),
+        'yellow': (2, 1), 'orange': (3, 0), 'purple': (0, 2),
+        'pink': (1, 0), 'brown': (3, 1), 'indigo': (0, 0),
+        'grey': (1, 1), 'white': (2, 2), 'violet': (3, 2),
     },
     # Round 8
     {
-        'red': (2, 2), 'green': (0, 0), 'blue': (1, 1),
-        'yellow': (2, 3), 'orange': (0, 1), 'purple': (1, 2),
-        'pink': (2, 0), 'brown': (0, 2), 'indigo': (1, 3),
-        'grey': (2, 1), 'white': (0, 3), 'violet': (1, 0),
+        'red': (0, 2), 'green': (1, 1), 'blue': (2, 2),
+        'yellow': (3, 2), 'orange': (0, 0), 'purple': (1, 0),
+        'pink': (2, 0), 'brown': (3, 0), 'indigo': (0, 1),
+        'grey': (1, 2), 'white': (2, 1), 'violet': (3, 1),
     },
     # Round 9
     {
-        'red': (1, 0), 'green': (2, 3), 'blue': (0, 1),
-        'yellow': (1, 3), 'orange': (2, 1), 'purple': (0, 2),
-        'pink': (1, 1), 'brown': (2, 0), 'indigo': (0, 3),
-        'grey': (1, 2), 'white': (2, 2), 'violet': (0, 0),
+        'red': (3, 1), 'green': (2, 1), 'blue': (1, 2),
+        'yellow': (0, 2), 'orange': (3, 0), 'purple': (2, 2),
+        'pink': (1, 0), 'brown': (0, 0), 'indigo': (3, 2),
+        'grey': (2, 0), 'white': (1, 1), 'violet': (0, 1),
     },
     # Round 10
     {
-        'red': (2, 0), 'green': (0, 2), 'blue': (1, 3),
-        'yellow': (2, 1), 'orange': (0, 3), 'purple': (1, 0),
-        'pink': (2, 3), 'brown': (0, 1), 'indigo': (1, 2),
-        'grey': (2, 2), 'white': (0, 0), 'violet': (1, 1),
+        'red': (1, 1), 'green': (0, 0), 'blue': (3, 2),
+        'yellow': (2, 1), 'orange': (1, 2), 'purple': (0, 1),
+        'pink': (3, 0), 'brown': (2, 0), 'indigo': (1, 0),
+        'grey': (0, 2), 'white': (3, 1), 'violet': (2, 2),
     },
 ]
