@@ -24,6 +24,10 @@ How do you run tests?
 
 N/A
 
+### Wire Frame
+
+[Wire Frame](./supporting-docs/Prismatic%20Puzzle%20Wire%20Frame.png)
+
 ### Domain
 
 [Domain Model](./supporting-docs/Domain%20Model.png)
