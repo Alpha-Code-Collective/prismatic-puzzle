@@ -3,7 +3,7 @@ import pygame.freetype
 from sys import exit
 import random
 # Assuming the static.py file is correctly placed relative to this script.
-from .static import COLORS, CLUES, rounds_correct_positions
+from .static import COLORS, CLUES, rounds_correct_positions, default_positions
 
 pygame.init()
 screen = pygame.display.set_mode((1200, 1000))
@@ -21,7 +21,7 @@ next_round_button_rect = pygame.Rect(425, 250, 150, 50)  # "Next Round" button, 
 # Grid settings
 grid_origin = (450, 250)
 cell_size = 100
-grid_cols, grid_rows = 3, 4
+grid_cols, grid_rows = 4, 3
 grid_positions = [(x, y) for x in range(grid_cols) for y in range(grid_rows)]
 
 cubes = []
@@ -46,18 +46,34 @@ def draw_grid(surface):
             pygame.draw.rect(surface, (255, 255, 255), rect, 3)
 
 def draw_buttons(surface):
-    # Draw "Start" button only if the game hasn't started
+    def draw_button(rect, text, is_active):
+        # Draw the button rectangle
+        pygame.draw.rect(surface, button_color, rect, 0, 5)
+        
+        # Render the text to a new Surface
+        text_surf = button_font.render(text, fgcolor=(255, 255, 255), size=24)[0]
+
+        # Calculate text position for centering
+        text_rect = text_surf.get_rect(center=rect.center)
+
+        # If the button is active and mouse is hovered, simulate hover effect
+        if is_active and rect.collidepoint(pygame.mouse.get_pos()):
+            pygame.draw.rect(surface, (0, 180, 0), rect, 0, 5)  # Adjust color for hover effect
+        
+        # Blit the text surface onto the screen
+        surface.blit(text_surf, text_rect)
+
+    # Draw "Start" button
     if not start_game:
-        button_font.render_to(surface, (start_button_rect.x + 20, start_button_rect.y + 15), "Start", (255, 255, 255))
-        pygame.draw.rect(surface, button_color, start_button_rect, 0, 5)
-    # Draw "Submit" button if the game has started
+        draw_button(start_button_rect, "Start", True)
+    # Draw "Submit" button
     if start_game and not positions_correct:
-        button_font.render_to(surface, (check_button_rect.x + 20, check_button_rect.y + 15), "Submit", (255, 255, 255))
-        pygame.draw.rect(surface, button_color, check_button_rect, 0, 5)
-    # Draw "Next Round" button if positions are correct
+        draw_button(check_button_rect, "Submit", True)
+    # Draw "Next Round" button
     if positions_correct:
-        button_font.render_to(surface, (next_round_button_rect.x + 20, next_round_button_rect.y + 15), "Next Round", (255, 255, 255))
-        pygame.draw.rect(surface, button_color, next_round_button_rect, 0, 5)
+        draw_button(next_round_button_rect, "Next Round", True)
+
+
 
 def draw_clues(surface, clues):
     y_offset = 600
@@ -69,31 +85,42 @@ def place_initial_cubes():
     global cubes
     cubes = []
 
-    # Adjust starting Y position for the cubes placed off the grid to ensure visibility
-    off_grid_start_y = screen.get_height() - cell_size - 10  # Place cubes at the bottom, with some padding
+    # Starting positions for cubes on the grid for the current round
+    starting_positions = default_positions[current_round]
 
-    # Adjust spacing between cubes to fit them all within the screen width
-    total_cubes = len(COLORS)
-    available_space = screen.get_width() - 100  # Assuming 50px padding on each side
-    cube_spacing = available_space // total_cubes  # Divide available space by the number of cubes
-
-    x_offset = 50  # Start 50px from the left edge of the screen
-
-    for color_name, correct_pos in rounds_correct_positions[current_round].items():
+    # Place the specified cubes on their starting positions on the grid
+    for color_name, grid_pos in starting_positions.items():
         color_rgb = COLORS[color_name]
-        cube_rect = pygame.Rect(x_offset, off_grid_start_y, cell_size, cell_size)
+        cube_rect = pygame.Rect(grid_origin[0] + grid_pos[0] * cell_size, grid_origin[1] + grid_pos[1] * cell_size, cell_size, cell_size)
         cubes.append({
-            'color': color_rgb, 
-            'rect': cube_rect, 
-            'grid_pos': None,  # Indicates the cube is not on the grid
-            'color_name': color_name, 
-            'correct_pos': correct_pos  # Keep the correct position for later checking
+            'color': color_rgb,
+            'rect': cube_rect,
+            'grid_pos': grid_pos,  # This time, we're assigning a grid position
+            'color_name': color_name,
+            'correct_pos': rounds_correct_positions[current_round][color_name]
         })
-        x_offset += cube_spacing  # Increment x_offset for the next cube placement
 
-    # Adjust cube spacing if too narrow
-    if cube_spacing < cell_size:
-        print("Warning: Cube spacing too narrow, consider reducing number of cubes or screen layout adjustments.")
+    # Adjust starting Y position for the cubes placed off the grid to ensure visibility
+    off_grid_start_y = screen.get_height() - cell_size - 10
+
+    # Place remaining cubes off the grid, excluding those already placed
+    placed_colors = starting_positions.keys()
+    x_offset = 50
+    for color_name, correct_pos in rounds_correct_positions[current_round].items():
+        if color_name not in placed_colors:
+            color_rgb = COLORS[color_name]
+            cube_rect = pygame.Rect(x_offset, off_grid_start_y, cell_size, cell_size)
+            cubes.append({
+                'color': color_rgb,
+                'rect': cube_rect,
+                'grid_pos': None,  # Indicates the cube is not on the grid
+                'color_name': color_name,
+                'correct_pos': correct_pos
+            })
+            x_offset += cell_size + 10  # Adjust spacing to ensure cubes don't overlap
+
+    # Note: Adjust x_offset increment and off_grid_start_y as needed based on your UI layout and total number of cubes
+
 
 
 
@@ -108,7 +135,7 @@ def check_cubes_position():
 
 def draw_message(surface, message):
     if message:
-        clue_font.render_to(surface, (300, 900), message, (0, 255, 0))
+        clue_font.render_to(surface, (400, 600), message, (0, 255, 0))
 
 def get_clicked_cube(pos):
     for cube in cubes:
