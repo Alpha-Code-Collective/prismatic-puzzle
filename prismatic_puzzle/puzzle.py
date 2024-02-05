@@ -4,6 +4,7 @@ from sys import exit
 import random
 # Assuming the static.py file is correctly placed relative to this script.
 from .static import COLORS, CLUES, rounds_correct_positions, default_positions
+from static import COLORS, CLUES, rounds_correct_positions
 
 pygame.init()
 screen = pygame.display.set_mode((1200, 1000))
