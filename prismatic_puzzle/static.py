@@ -102,20 +102,6 @@ default_positions = [
         "Cobalt": (2, 2)
     },
 
-    # Round 2
-    {
-        "Teal": (1, 2),
-        "White": (2, 2),
-        "Grey": (1, 1),
-        "Emerald": (0, 0),
-        "Cobalt": (2, 2),
-        "White": (0, 2),
-        "Orange": (1, 1),
-        "Brown": (2, 1),
-        "Mustard": (3, 1),
-        "Purple": (3, 0),
-    },
-
     # round 2
     {
         "Grey": (1, 1),
