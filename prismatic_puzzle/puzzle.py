@@ -1,12 +1,11 @@
 import pygame
 import pygame.freetype
+import pygame.mixer
 from sys import exit
 import random
 
 
-
-
-#from static import COLORS, CLUES, rounds_correct_positions, default_positions
+# from static import COLORS, CLUES, rounds_correct_positions, default_positions
 # The .static is for Windows users
 from static import COLORS, CLUES, rounds_correct_positions, default_positions
 
@@ -21,7 +20,6 @@ title_font = pygame.freetype.SysFont("Arial", 36)
 button_font = pygame.freetype.SysFont("Arial", 24)
 clue_font = pygame.freetype.SysFont("Arial", 20)
 button_color = (0, 150, 0)
-
 
 
 button_width = 150
@@ -59,7 +57,15 @@ positions_correct = False  # Flag to indicate if the cube positions are correct
 current_round = 0
 message = ""
 start_game_button_rect = pygame.Rect(500, 500, 200, 50)  # Adjust position and size as needed
+def play_music(music_file, volume=0.8, loops=-1):
+    pygame.mixer.init()
+    music = pygame.mixer.music.load(music_file)
+    pygame.mixer.music.set_volume(volume)
+    # pygame.mixer.music.set_fade_in_time(fade_in_time)
+    # pygame.mixer.music.set_loops(loops)
+    pygame.mixer.music.play()
 
+play_music("prismatic_puzzle/Restless_Bones.mp3")
 def draw_menu(surface, mouse_pos):
     if not menu_visible:
         return  # Skip drawing the menu if it's not supposed to be visible
@@ -121,7 +127,6 @@ def draw_container(surface):
     pygame.draw.rect(surface, container_color, container_rect)
 
 
-
 def draw_cubes(surface):
     for cube in cubes:
         pygame.draw.rect(surface, cube['color'], cube['rect'])
@@ -165,7 +170,6 @@ def draw_buttons(surface):
     rules_surf, rules_rect = button_font.render("Rules", (0, 0, 0))
     rules_rect.center = rules_button_rect.center
     surface.blit(rules_surf, rules_rect)
-
 
 
 def draw_clues(surface, clues):
@@ -330,9 +334,8 @@ while True:
             if start_game_button_rect.collidepoint(event.pos):
                 menu_visible = False  # Hide the menu only if "Start Game" is clicked
                 start_game = True
-                                
-                # No need for 'continue' as we want to process other events if needed
 
+                # No need for 'continue' as we want to process other events if needed
 
             handle_game_logic(event)
 
@@ -347,7 +350,7 @@ while True:
             # Check if the "Rules" button is clicked
             if rules_button_rect.collidepoint(event.pos):
                 show_rules = not show_rules  # Toggle rules visibility
-                
+
             elif show_rules and not rules_button_rect.collidepoint(event.pos):
                 # If the rules are shown and the click is outside the rules overlay, hide the rules
                 show_rules = False         
@@ -360,14 +363,16 @@ while True:
         elif event.type == pygame.MOUSEMOTION:
             if selected_cube:  # Move the selected cube with mouse
                 selected_cube['rect'].center = event.pos
-    
+
+  
     screen.fill((0, 0, 0))
     draw_grid(screen)
     draw_container(screen)
     draw_buttons(screen)
     draw_clues(screen, CLUES)
+    
     if start_game:
-        
+
         draw_cubes(screen)
     if show_rules:
         draw_rules_overlay(screen)
