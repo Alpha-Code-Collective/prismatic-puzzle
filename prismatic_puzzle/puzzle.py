@@ -2,8 +2,15 @@ import pygame
 import pygame.freetype
 from sys import exit
 import random
-from .static import COLORS, CLUES, rounds_correct_positions, default_positions
+
+
 #Testing branch protection on dev branch
+
+# Assuming the static.py file is correctly placed relative to this script.
+# from .static import COLORS, CLUES, rounds_correct_positions, default_positions
+from static import COLORS, CLUES, rounds_correct_positions, default_positions
+
+
 pygame.init()
 screen_width, screen_height = 1200, 1000
 screen = pygame.display.set_mode((screen_width, screen_height))
