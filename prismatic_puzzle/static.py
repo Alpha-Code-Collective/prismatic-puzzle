@@ -162,19 +162,20 @@ default_positions = [
     },
     # round 10, can't dynamically render this round
     {
-        "Mint": (0, 0)
-        "Teal": (1, 0)
-        "Coral": (2, 0)
-        "Cobalt": (3, 0)
-        "Emerald": (1, 1)
-        "Mustard": (3, 1)
-        "Magenta": (0, 2)
-        "Grey":(1, 2)
-        "Purple": (2, 2)
+        "Mint": (0, 0),
+        "Teal": (1, 0),
+        "Coral": (2, 0),
+        "Cobalt": (3, 0),
+        "Emerald": (1, 1),
+        "Mustard": (3, 1),
+        "Magenta": (0, 2),
+        "Grey":(1, 2),
+        "Purple": (2, 2),
         "Brown": (3, 2)
     }
-    
 ]
+    
+
 # may need to fix 1-4, 0,0 starts at top left not botton left
 rounds_correct_positions = [
     # Round 1
