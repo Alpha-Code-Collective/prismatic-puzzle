@@ -57,15 +57,14 @@ positions_correct = False  # Flag to indicate if the cube positions are correct
 current_round = 0
 message = ""
 start_game_button_rect = pygame.Rect(500, 500, 200, 50)  # Adjust position and size as needed
-def play_music(music_file, volume=0.8, loops=-1):
+def play_music(music_file, volume=0.2, loops=-1):
     pygame.mixer.init()
     music = pygame.mixer.music.load(music_file)
     pygame.mixer.music.set_volume(volume)
-    # pygame.mixer.music.set_fade_in_time(fade_in_time)
-    # pygame.mixer.music.set_loops(loops)
+    
     pygame.mixer.music.play()
 
-play_music("prismatic_puzzle/Restless_Bones.mp3")
+play_music("prismatic_puzzle/Restless_Bones.mp3", volume=.2, loops=-1)
 def draw_menu(surface, mouse_pos):
     if not menu_visible:
         return  # Skip drawing the menu if it's not supposed to be visible
