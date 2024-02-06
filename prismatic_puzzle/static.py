@@ -96,6 +96,17 @@ CLUES = [
 default_positions = [
     # Round 1
     {
+
+        "Coral": (1, 2),
+        "Emerald": (0, 0),
+        "Cobalt": (2, 2)
+    },
+    # Round 2
+    {
+        "Teal": (1, 2),
+        "White": (2, 2),
+        "Grey": (1, 1)
+
         "Emerald": (0, 0),
         "Cobalt": (2, 2),
         "White": (0, 2),
@@ -172,7 +183,9 @@ default_positions = [
         "Grey":(1, 2),
         "Purple": (2, 2),
         "Brown": (3, 2)
+
     }
+    ## Need all 10 rounds!!!
 ]
     
 
