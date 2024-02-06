@@ -170,9 +170,7 @@ default_positions = [
         "Grey":(1, 2),
         "Purple": (2, 2),
         "Brown": (3, 2)
-
     }
-    ## Need all 10 rounds!!!
 ]
     
 

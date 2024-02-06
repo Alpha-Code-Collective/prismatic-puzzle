@@ -2,10 +2,6 @@ import pygame
 import pygame.freetype
 from sys import exit
 import random
-
-
-
-
 #from static import COLORS, CLUES, rounds_correct_positions, default_positions
 # The .static is for Windows users
 from .static import COLORS, CLUES, rounds_correct_positions, default_positions
@@ -22,32 +18,34 @@ button_font = pygame.freetype.SysFont("Arial", 24)
 clue_font = pygame.freetype.SysFont("Arial", 20)
 button_color = (0, 150, 0)
 
-
-
+# Button Settings
 button_width = 150
 button_x = (screen_width - button_width) // 2
 start_button_y = 50  # Y position for the "Start" button
 check_button_y = 125  # Updated for clarity, providing more space between buttons
 next_round_button_y = 200  # Updated for clarity
 rules_button_y = 25
-
+# Buttons
 start_button_rect = pygame.Rect(button_x, start_button_y, button_width, 50)  # "Start" button
 check_button_rect = pygame.Rect(button_x, check_button_y, button_width, 50)  # "Submit" button
 next_round_button_rect = pygame.Rect(button_x, next_round_button_y, button_width, 50)  # "Next Round" button
-rules_button_rect = pygame.Rect(button_x, rules_button_y, button_width, 50)  # Define the "Rules" button rectangle
-
+rules_button_rect = pygame.Rect(button_x, rules_button_y, button_width, 50)
+undo_button_rect = pygame.Rect(button_x + 300, 250, 100, 50)
+reset_button_rect = pygame.Rect(button_x + 300, 350, 100, 50)
 # Grid settings
 cell_size = 100
 grid_cols, grid_rows = 4, 3
-
 total_grid_width = grid_cols * cell_size
 total_grid_height = grid_rows * cell_size
-
 grid_origin_x = (screen_width - total_grid_width) // 2
 grid_origin_y = 250
 grid_origin = (grid_origin_x, grid_origin_y)
-
 grid_positions = [(x, y) for x in range(grid_cols) for y in range(grid_rows)]
+
+# Container settings
+container_height = 100  # Adjust height as needed
+container_y = screen.get_height() - container_height  # Position it at the bottom
+container_color = (100, 100, 100)  # A grey color, adjust as needed
 
 # Overlay menus
 menu_visible = True  # Make the menu visible initially or upon certain conditions
@@ -59,7 +57,25 @@ positions_correct = False  # Flag to indicate if the cube positions are correct
 current_round = 0
 message = ""
 start_game_button_rect = pygame.Rect(500, 500, 200, 50)  # Adjust position and size as needed
+move_history = []
+# ----------------------------Undo functions--------------------
 
+def record_move(cube, old_rect, old_grid_pos):
+    move = {
+        'cube': cube,
+        'old_rect': pygame.Rect(old_rect),  # Deep copy of the rect
+        'old_grid_pos': old_grid_pos  # Assuming this is a simple value or tuple, not a mutable object
+    }
+    move_history.append(move)
+def undo_last_move():
+    if move_history:
+        last_move = move_history.pop()
+        cube = last_move['cube']
+        cube['rect'] = pygame.Rect(last_move['old_rect'])  # Re-apply the old rect
+        cube['grid_pos'] = last_move['old_grid_pos']  # Re-apply the old grid position
+#-----------------------------Undo Settings and functions END------------------------
+        
+#-------------------------------Draw functions-------------------------------------
 def draw_menu(surface, mouse_pos):
     if not menu_visible:
         return  # Skip drawing the menu if it's not supposed to be visible
@@ -111,10 +127,7 @@ def draw_rules_overlay(surface):
             clue_font.render_to(surface, (420, y_offset), line, (0, 0, 0))
             y_offset += 30
 
-# Container settings
-container_height = 100  # Adjust height as needed
-container_y = screen.get_height() - container_height  # Position it at the bottom
-container_color = (100, 100, 100)  # A grey color, adjust as needed
+
 
 def draw_container(surface):
     container_rect = pygame.Rect(0, container_y, screen.get_width(), container_height)
@@ -154,6 +167,8 @@ def draw_buttons(surface):
         surface.blit(text_surf, text_rect)
 
     if start_game and not positions_correct:
+        draw_button(reset_button_rect, "Reset", True)
+        draw_button(undo_button_rect, "Undo", True)
         draw_button(check_button_rect, "Submit", True)
     # Draw "Next Round" button
     if positions_correct:
@@ -184,6 +199,10 @@ def draw_clues(surface, clues):
         clue_font.render_to(surface, (x_position, y_offset), clue, (255, 255, 255))
         y_offset += 30  # Increment y_offset for the next clue
 
+def draw_message(surface, message):
+    if message:
+        clue_font.render_to(surface, (400, 600), message, (0, 255, 0))
+#-------------------------------Draw functions END-------------------------------------
 
 def place_initial_cubes():
     global cubes
@@ -251,9 +270,7 @@ def check_cubes_position():
     positions_correct = all(cube['grid_pos'] == cube['correct_pos'] for cube in cubes)
     message = "Correct! Click 'Next Round' to continue." if positions_correct else "Not quite right, try again."
 
-def draw_message(surface, message):
-    if message:
-        clue_font.render_to(surface, (400, 600), message, (0, 255, 0))
+
 
 def get_clicked_cube(pos):
     for cube in cubes:
@@ -302,6 +319,7 @@ def snap_cube_to_tray(cube):
     # Update the cube's position to the calculated tray position
     cube['rect'].topleft = (cube_x, tray_y)
 
+# --------------------------Testing functions ---------------------------------------
 def skip_to_next_level():
     global current_round, start_game, positions_correct, cubes, message
     if current_round < len(rounds_correct_positions) - 1:
@@ -334,7 +352,7 @@ def go_to_previous_level():
 
     # Optionally, if you want to hide the menu when going back to the previous level
     # menu_visible = False
-
+# --------------------------Testing functions END-------------------------------
 
 def handle_game_logic(event):
     global start_game, current_round, positions_correct
@@ -343,7 +361,6 @@ def handle_game_logic(event):
     elif next_round_button_rect.collidepoint(event.pos) and positions_correct:
         if current_round < len(rounds_correct_positions) - 1:
             current_round += 1
-
             start_game = True
             positions_correct = False
             place_initial_cubes()
@@ -351,6 +368,8 @@ def handle_game_logic(event):
             message = "Game Over! You've completed all rounds!"
 
 place_initial_cubes()
+
+
 
 while True:
     mouse_pos = pygame.mouse.get_pos()  # Get current mouse position
@@ -360,18 +379,18 @@ while True:
             pygame.quit()
             exit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
+            if undo_button_rect.collidepoint(event.pos):
+                undo_last_move()
+                continue
             if start_game_button_rect.collidepoint(event.pos):
                 menu_visible = False  # Hide the menu only if "Start Game" is clicked
                 start_game = True
-                                
-                # No need for 'continue' as we want to process other events if needed
-
-
             handle_game_logic(event)
 
             if not selected_cube:  # Only select a new cube if we aren't already dragging one
                 selected_cube = get_clicked_cube(event.pos)
                 if selected_cube:  # If a cube is selected, remove it from its grid position for free dragging
+                    record_move(selected_cube, selected_cube['rect'].copy(), selected_cube['grid_pos'])
                     selected_cube['grid_pos'] = None
 
             # Handle button clicks separately from cube selection
@@ -387,7 +406,7 @@ while True:
 
         elif event.type == pygame.MOUSEBUTTONUP:
             if selected_cube:
-                snap_cube_to_grid(selected_cube)  # Snap cube to grid or leave it off-grid as per logic in this function
+                snap_cube_to_grid(selected_cube)
                 selected_cube = None  # Deselect cube after dropping it
 
         elif event.type == pygame.MOUSEMOTION:
