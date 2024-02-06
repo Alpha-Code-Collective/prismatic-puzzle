@@ -16,7 +16,7 @@ COLORS = {
 CLUES = [
     # Round 1 clues
     [
-        "Coral and Mageenta are in the same column.",
+        "Coral and Magenta are in the same column.",
         "Teal sits next to Magenta.",
         "Either Teal or Grey sits next to Cobalt.",
         "Coral sits next to White.",
