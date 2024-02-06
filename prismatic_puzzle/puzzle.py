@@ -8,7 +8,7 @@ import random
 
 #from static import COLORS, CLUES, rounds_correct_positions, default_positions
 # The .static is for Windows users
-from .static import COLORS, CLUES, rounds_correct_positions, default_positions
+from static import COLORS, CLUES, rounds_correct_positions, default_positions
 
 pygame.init()
 screen_width, screen_height = 1200, 1000
