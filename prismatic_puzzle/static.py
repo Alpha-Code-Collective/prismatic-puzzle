@@ -16,7 +16,7 @@ COLORS = {
 CLUES = [
     # Round 1 clues
     [
-        "Coral and Mageenta are in the same column.",
+        "Coral and Magenta are in the same column.",
         "Teal sits next to Magenta.",
         "Either Teal or Grey sits next to Cobalt.",
         "Coral sits next to White.",
@@ -102,20 +102,6 @@ default_positions = [
         "Cobalt": (2, 2)
     },
 
-    # Round 2
-    {
-        "Teal": (1, 2),
-        "White": (2, 2),
-        "Grey": (1, 1),
-        "Emerald": (0, 0),
-        "Cobalt": (2, 2),
-        "White": (0, 2),
-        "Orange": (1, 1),
-        "Brown": (2, 1),
-        "Mustard": (3, 1),
-        "Purple": (3, 0),
-    },
-
     # round 2
     {
         "Grey": (1, 1),
@@ -184,9 +170,7 @@ default_positions = [
         "Grey":(1, 2),
         "Purple": (2, 2),
         "Brown": (3, 2)
-
     }
-    ## Need all 10 rounds!!!
 ]
     
 
