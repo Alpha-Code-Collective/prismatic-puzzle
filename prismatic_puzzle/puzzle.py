@@ -263,13 +263,14 @@ def handle_game_logic(event):
     elif next_round_button_rect.collidepoint(event.pos) and positions_correct:
         if current_round < len(rounds_correct_positions) - 1:
             current_round += 1
+
             start_game = True
             positions_correct = False
             place_initial_cubes()
         else:
             message = "Game Over! You've completed all rounds!"
 
-
+place_initial_cubes()
 
 while True:
     mouse_pos = pygame.mouse.get_pos()  # Get current mouse position
@@ -282,7 +283,7 @@ while True:
             if start_game_button_rect.collidepoint(event.pos):
                 menu_visible = False  # Hide the menu only if "Start Game" is clicked
                 start_game = True
-                place_initial_cubes()
+                                
                 # No need for 'continue' as we want to process other events if needed
 
 
