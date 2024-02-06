@@ -302,6 +302,39 @@ def snap_cube_to_tray(cube):
     # Update the cube's position to the calculated tray position
     cube['rect'].topleft = (cube_x, tray_y)
 
+def skip_to_next_level():
+    global current_round, start_game, positions_correct, cubes, message
+    if current_round < len(rounds_correct_positions) - 1:
+        current_round += 1  # Move to the next round
+    else:
+        message = "You've reached the final level!"  # Notify the player if they're already at the last level
+        return  # Exit the function to avoid resetting the game state
+
+    # Reset game state for the new level
+    start_game = True
+    positions_correct = False
+    cubes = []  # Clear the cubes list to start fresh for the new level
+    place_initial_cubes()  # Place initial cubes for the new level
+    message = ""  # Clear any previous messages
+
+def go_to_previous_level():
+    global current_round, start_game, positions_correct, cubes, message
+    if current_round > 0:
+        current_round -= 1  # Move to the previous round
+    else:
+        message = "This is the first level!"  # Notify the player if they're already at the first level
+        return  # Exit the function to avoid any further actions
+
+    # Reset game state for the previous level
+    start_game = True
+    positions_correct = False
+    cubes = []  # Clear the cubes list to start fresh for the previous level
+    place_initial_cubes()  # Place initial cubes for the previous level
+    message = ""  # Clear any previous messages
+
+    # Optionally, if you want to hide the menu when going back to the previous level
+    # menu_visible = False
+
 
 def handle_game_logic(event):
     global start_game, current_round, positions_correct
@@ -360,6 +393,12 @@ while True:
         elif event.type == pygame.MOUSEMOTION:
             if selected_cube:  # Move the selected cube with mouse
                 selected_cube['rect'].center = event.pos
+
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_n:  # 'N' key for 'Next Level'
+                skip_to_next_level()
+            elif event.key == pygame.K_b:  # 'B' key for 'Previous Level'
+                go_to_previous_level()
     
     screen.fill((0, 0, 0))
     draw_grid(screen)
