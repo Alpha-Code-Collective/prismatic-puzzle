@@ -1,159 +1,344 @@
 COLORS = {
-    'red': (255, 0, 0), 'green': (0, 255, 0), 'blue': (0, 0, 255),
-    'yellow': (255, 255, 0), 'orange': (255, 165, 0), 'purple': (128, 0, 128),
-    'pink': (255, 192, 203), 'brown': (165, 42, 42), 'indigo': (75, 0, 130),
-    'grey': (128, 128, 128), 'white': (255, 255, 255), 'violet': (238, 130, 238)
+    "Coral": (255, 127, 80),
+    "Emerald": (4, 99, 7),
+    "Cobalt": (0, 71, 171),
+    "Mustard": (255, 219, 88),
+    "Orange": (255, 103, 0),
+    "Purple": (104, 40, 96),
+    "Magenta": (255, 0, 255),
+    "Brown": (150, 75, 0),
+    "Mint": (0, 245, 163),
+    "Teal": (0, 128, 128),
+    "White": (255, 255, 255),
+    "Grey": (103, 103, 103),
 }
 
 CLUES = [
-   # Round 1 clues
+    # Round 1 clues
     [
-        "round 1 testing",
-        "x is in the same row as y",
-        "x is in the same row as y",
-        "x is in the same row as y"
+        "Coral and Mageenta are in the same column.",
+        "Teal sits next to Magenta.",
+        "Either Teal or Grey sits next to Cobalt.",
+        "Coral sits next to White.",
     ],
     # Round 2 clues
     [
-        "round 2 testing",
-        "x is in the same row as y",
-        "x is in the same row as y",
-        "x is in the same row as y"
+        "White isnt ina corner space but Mustard is.",
+        "Coral is the farthest distance from Emerald, which sits next to Teal.",
+        "Purple is in the same column as Mint, which is in the same row as Orange.",
     ],
     # Round 3 clues
     [
-        "round 3 testing",
-        "x is in the same row as y",
-        "x is in the same row as y",
-        "x is in the same row as y"
+        "White and Cobalt are in the same column.",
+        "Mustard and Orange are in the same column.",
+        "Brown is closer to Emerald than Teal.",
+        "Mustard is not in the same row as White, which is not in the same column as Teal.",
+        "Coral sits next to a color found in the Irish flag.",
     ],
     # Round 4 clues
     [
-        "round 4 testing",
-        "x is in the same row as y",
-        "x is in the same row as y",
-        "x is in the same row as y"
+        "Emerald, Teal, and Mint are in the same row.",
+        "Black and White are in the opposite corners.",
+        "Teal, Emerald and Brown sit next to Magenta.",
+        "White sits next to Mint.",
+        "Orange and Purple are in the same row.",
+        "Teal, Emerald & Mustard are in the same column.",
     ],
     # Round 5 clues
     [
-        "round 5 testing",
-        "x is in the same row as y",
-        "x is in the same row as y",
-        "x is in the same row as y"
+        "Colors that start with 'B' and 'C' are in the corners.",
+        "Colors that start with 'M' are in the same column.",
+        "Neither Coral nor Teal sit next to Magenta.",
+        "Coral and Brown are in the same row.",
+        "Emerald sits next to Mustard.",
     ],
     # Round 6 clues
     [
-        "round 6 testing",
-        "x is in the same row as y",
-        "x is in the same row as y",
-        "x is in the same row as y"
+        "Orange, Mint, and Purple are in the same column.",
+        "Cobalt is in the same row as Mustard.",
+        "All rows are in alphabetical order from left to right.",
+        "Orange is not in the same row as Magenta.",
     ],
     # Round 7 clues
     [
-        "round 7 testing",
-        "x is in the same row as y",
-        "x is in the same row as y",
-        "x is in the same row as y"
+        "Colors that start with the same letter are in the same column.",
+        "Mint sits between Purple and Emerald.",
+        "Teal and Coral are as far apart as they can be.",
+        "Teal is in the same column as White, which is in the same row as Magenta, which is in the same column as Mustard, which is in the same row as Coral.",
+        "Orange sits next to Emerald.",
     ],
     # Round 8 clues
     [
-        "round 8 testing",
-        "x is in the same row as y",
-        "x is in the same row as y",
-        "x is in the same row as y"
+        "Teal and Brown are in the middle row and middle two columns.",
+        "All rows are in alphabetical order from left to right.",
+        "White is in the same column as Magenta and Purple.",
+        "Mustard sits above Brown.",
     ],
     # Round 9 clues
     [
-        "round 9 testing",
-        "x is in the same row as y",
-        "x is in the same row as y",
-        "x is in the same row as y"
+        "Two rows are in alphabetical order from left to right.",
+        "If Orange is in a corner space, then White sits between Mint and Emerald.",
+        "Teal, Mint, and Purple are in the same row.",
+        "Teal is opposite from Mustard.",
     ],
     # Round 10 clues
     [
-        "round 10 testing",
-        "x is in the same row as y",
-        "x is in the same row as y",
-        "x is in the same row as y"
+        "Place Orange and White after completing the rest of the clues in order.",
+        "Swap Mint with a color that starts with 'C'.",
+        "Shift all blocks down so that open spaces are at the top of the board.",
+        "Reverse the order of the middle row.",
+        "Swap the colors in the left-most column."
+        "Shift blocks left so that open spaces are at the right."
+        "Cobalt should be in the top row"
+        "Place Orange next to Coral",
     ],
-
 ]
 default_positions = [
     # Round 1
     {
-        'red': (3, 0), 'green': (1, 0), 'blue': (2, 0)
-    }
-]
 
-rounds_correct_positions = [
-    # Round 1
-    {
-        'red': (3, 0), 'green': (1, 0), 'blue': (2, 0),
-        'yellow': (0, 1), 'orange': (1, 1), 'purple': (2, 1),
-        'pink': (3, 1), 'brown': (0, 2), 'indigo': (1, 2),
-        'grey': (2, 2), 'white': (3, 2), 'violet': (0, 0),
+        "Coral": (1, 2),
+        "Emerald": (0, 0),
+        "Cobalt": (2, 2)
     },
     # Round 2
     {
-        'red': (1, 2), 'green': (3, 1), 'blue': (0, 0),
-        'yellow': (1, 0), 'orange': (2, 1), 'purple': (3, 0),
-        'pink': (0, 2), 'brown': (2, 0), 'indigo': (3, 2),
-        'grey': (1, 1), 'white': (2, 2), 'violet': (0, 1),
+        "Teal": (1, 2),
+        "White": (2, 2),
+        "Grey": (1, 1),
+
+        "Emerald": (0, 0),
+        "Cobalt": (2, 2),
+        "White": (0, 2),
+        "Orange": (1, 1),
+        "Brown": (2, 1),
+        "Mustard": (3, 1),
+        "Purple": (3, 0),
+    },
+    # round 2
+    {
+        "Grey": (1, 1),
+        "Cobalt": (1, 0),
+        "Brown": (2, 1),
+        "Orange": (3, 1),
+        "Coral": (3, 0),
+        "Magenta": (2, 0),
+    },
+    # round 3
+    {
+        "Emerald": (0, 1),
+        "Mint": (1, 2),
+        "Grey": (2, 1),
+        "Purple": (3, 2),
+        "Magenta": (1, 0),
+        "Coral": (3, 0),
+    },
+    # round 4
+    {
+        "Orange": (1, 2),
+        "Coral": (2, 2),
+        "Magenta": (2, 1),
+        "Cobalt": (1, 0),
+    },
+    # round 5
+    {
+        "Orange": (2, 0),
+        "Emerald": (0, 1),
+        "Teal": (2, 1),
+        "Purple": (2, 3),
+        "Cobalt": (3, 2),
+        "White": (3, 1),
+    },
+    # round 6
+    {
+        "Coral": (1, 2),
+        "Emerald": (2, 1),
+        "Teal": (1, 3),
+        "White": (2, 3),
+        "Grey": (0, 1),
+    },
+    # round 7
+    {
+        "Cobalt": (2, 2),
+        "Mint": (2, 0),
+        "Brown": (1, 1),
+    },
+    # round 8
+    {},
+    # round 9
+    {
+        "Coral": (2, 0),
+        "Cobalt": (1, 3),
+        "Mustard": (2, 1),
+    },
+    # round 10, can't dynamically render this round
+    {
+        "Mint": (0, 0),
+        "Teal": (1, 0),
+        "Coral": (2, 0),
+        "Cobalt": (3, 0),
+        "Emerald": (1, 1),
+        "Mustard": (3, 1),
+        "Magenta": (0, 2),
+        "Grey":(1, 2),
+        "Purple": (2, 2),
+        "Brown": (3, 2)
+
+    }
+    ## Need all 10 rounds!!!
+]
+    
+
+# may need to fix 1-4, 0,0 starts at top left not botton left
+rounds_correct_positions = [
+    # Round 1
+    {
+        "Coral": (1, 2),
+        "Emerald": (0, 0),
+        "Cobalt": (2, 2),
+        "Mustard": (3, 1),
+        "Orange": (1, 1),
+        "Purple": (3, 0),
+        "Magenta": (1, 0),
+        "Brown": (2, 1),
+        "Mint": (0, 1),
+        "Teal": (3, 2),
+        "White": (0, 2),
+        "Grey": (2, 0),
+    },
+    # Round 2
+    {
+        "Coral": (3, 0),
+        "Emerald": (0, 2),
+        "Cobalt": (1, 0),
+        "Mustard": (3, 2),
+        "Orange": (3, 1),
+        "Purple": (0, 0),
+        "Magenta": (2, 0),
+        "Brown": (2, 1),
+        "Mint": (0, 1),
+        "Teal": (1, 2),
+        "White": (2, 2),
+        "Grey": (1, 1),
     },
     # Round 3
     {
-        'red': (0, 1), 'green': (2, 2), 'blue': (3, 1),
-        'yellow': (0, 2), 'orange': (1, 1), 'purple': (2, 0),
-        'pink': (3, 2), 'brown': (0, 0), 'indigo': (1, 2),
-        'grey': (2, 1), 'white': (3, 0), 'violet': (1, 0),
+        "Coral": (3, 0),
+        "Emerald": (0, 1),
+        "Cobalt": (0, 2),
+        "Mustard": (2, 2),
+        "Orange": (2, 0),
+        "Purple": (3, 2),
+        "Magenta": (1, 0),
+        "Brown": (1, 1),
+        "Mint": (1, 2),
+        "Teal": (3, 1),
+        "White": (0, 0),
+        "Grey": (2, 1),
     },
     # Round 4
     {
-        'red': (2, 1), 'green': (1, 2), 'blue': (0, 2),
-        'yellow': (3, 1), 'orange': (1, 0), 'purple': (2, 2),
-        'pink': (0, 1), 'brown': (3, 0), 'indigo': (1, 1),
-        'grey': (2, 0), 'white': (0, 0), 'violet': (3, 2),
+        "Coral": (2, 2),
+        "Emerald": (3, 1),
+        "Cobalt": (1, 0),
+        "Mustard": (3, 0),
+        "Orange": (1, 2),
+        "Purple": (0, 2),
+        "Magenta": (2, 1),
+        "Brown": (2, 0),
+        "Mint": (0, 1),
+        "Teal": (1, 1),
+        "White": (0, 0),
+        "Grey": (3, 2),
     },
     # Round 5
     {
-        'red': (3, 2), 'green': (2, 0), 'blue': (1, 1),
-        'yellow': (0, 0), 'orange': (3, 1), 'purple': (2, 1),
-        'pink': (1, 2), 'brown': (0, 1), 'indigo': (3, 0),
-        'grey': (2, 2), 'white': (1, 0), 'violet': (0, 2),
+        "Coral": (3, 0),
+        "Emerald": (0, 1),
+        "Cobalt": (3, 2),
+        "Mustard": (1, 1),
+        "Orange": (2, 0),
+        "Purple": (2, 3),
+        "Magenta": (1, 0),
+        "Brown": (0, 0),
+        "Mint": (1, 2),
+        "Teal": (2, 1),
+        "White": (3, 1),
+        "Grey": (0, 2),
     },
     # Round 6
     {
-        'red': (1, 0), 'green': (2, 2), 'blue': (3, 0),
-        'yellow': (0, 2), 'orange': (1, 1), 'purple': (2, 0),
-        'pink': (3, 1), 'brown': (0, 0), 'indigo': (1, 2),
-        'grey': (2, 1), 'white': (3, 2), 'violet': (0, 1),
+        "Coral": (1, 2),
+        "Emerald": (2, 1),
+        "Cobalt": (0, 3),
+        "Mustard": (1, 1),
+        "Orange": (2, 0),
+        "Purple": (0, 2),
+        "Magenta": (1, 0),
+        "Brown": (2, 2),
+        "Mint": (0, 0),
+        "Teal": (1, 3),
+        "White": (2, 3),
+        "Grey": (0, 1),
     },
     # Round 7
     {
-        'red': (2, 0), 'green': (0, 1), 'blue': (1, 2),
-        'yellow': (2, 1), 'orange': (3, 0), 'purple': (0, 2),
-        'pink': (1, 0), 'brown': (3, 1), 'indigo': (0, 0),
-        'grey': (1, 1), 'white': (2, 2), 'violet': (3, 2),
+        "Coral": (0, 1),
+        "Emerald": (1, 0),
+        "Cobalt": (2, 2),
+        "Mustard": (0, 0),
+        "Orange": (1, 2),
+        "Purple": (2, 3),
+        "Magenta": (0, 2),
+        "Brown": (1, 1),
+        "Mint": (2, 0),
+        "Teal": (0, 3),
+        "White": (1, 3),
+        "Grey": (2, 1),
     },
     # Round 8
     {
-        'red': (0, 2), 'green': (1, 1), 'blue': (2, 2),
-        'yellow': (3, 2), 'orange': (0, 0), 'purple': (1, 0),
-        'pink': (2, 0), 'brown': (3, 0), 'indigo': (0, 1),
-        'grey': (1, 2), 'white': (2, 1), 'violet': (3, 1),
+        "Coral": (2, 2),
+        "Emerald": (0, 0),
+        "Cobalt": (1, 1),
+        "Mustard": (2, 3),
+        "Orange": (0, 1),
+        "Purple": (1, 2),
+        "Magenta": (2, 0),
+        "Brown": (0, 2),
+        "Mint": (1, 3),
+        "Teal": (2, 1),
+        "White": (0, 3),
+        "Grey": (1, 0),
     },
     # Round 9
     {
-        'red': (3, 1), 'green': (2, 1), 'blue': (1, 2),
-        'yellow': (0, 2), 'orange': (3, 0), 'purple': (2, 2),
-        'pink': (1, 0), 'brown': (0, 0), 'indigo': (3, 2),
-        'grey': (2, 0), 'white': (1, 1), 'violet': (0, 1),
+        "Coral": (1, 0),
+        "Emerald": (2, 3),
+        "Cobalt": (0, 1),
+        "Mustard": (1, 3),
+        "Orange": (2, 1),
+        "Purple": (0, 2),
+        "Magenta": (1, 1),
+        "Brown": (2, 0),
+        "Mint": (0, 3),
+        "Teal": (1, 2),
+        "White": (2, 2),
+        "Grey": (0, 0),
     },
     # Round 10
     {
-        'red': (1, 1), 'green': (0, 0), 'blue': (3, 2),
-        'yellow': (2, 1), 'orange': (1, 2), 'purple': (0, 1),
-        'pink': (3, 0), 'brown': (2, 0), 'indigo': (1, 0),
-        'grey': (0, 2), 'white': (3, 1), 'violet': (2, 2),
+        "Coral": (2, 0),
+        "Emerald": (0, 2),
+        "Cobalt": (1, 3),
+        "Mustard": (2, 1),
+        "Orange": (0, 3),
+        "Purple": (1, 0),
+        "Magenta": (2, 3),
+        "Brown": (0, 1),
+        "Mint": (1, 2),
+        "Teal": (2, 2),
+        "White": (0, 0),
+        "Grey": (1, 1),
     },
 ]
