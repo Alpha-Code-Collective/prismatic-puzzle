@@ -3,7 +3,7 @@ import pygame.freetype
 from sys import exit
 import random
 # Assuming the static.py file is correctly placed relative to this script.
-from .static import COLORS, CLUES, rounds_correct_positions, default_positions
+from static import COLORS, CLUES, rounds_correct_positions, default_positions
 
 pygame.init()
 screen = pygame.display.set_mode((1200, 1000))
@@ -11,12 +11,15 @@ pygame.display.set_caption('Chroma Cube')
 clock = pygame.time.Clock()
 
 # GUI settings
+title_font = pygame.freetype.SysFont("Arial", 36)
 button_font = pygame.freetype.SysFont("Arial", 24)
 clue_font = pygame.freetype.SysFont("Arial", 20)
 button_color = (0, 150, 0)
-start_button_rect = pygame.Rect(425, 50, 150, 50)  # "Start" button
 check_button_rect = pygame.Rect(425, 150, 150, 50)  # "Submit" button
 next_round_button_rect = pygame.Rect(425, 250, 150, 50)  # "Next Round" button, shown after correct submission
+#####
+rules_button_rect = pygame.Rect(1000, 25, 150, 50)  # Define the "Rules" button rectangle
+
 
 # Grid settings
 grid_origin = (450, 250)
@@ -24,12 +27,68 @@ cell_size = 100
 grid_cols, grid_rows = 4, 3
 grid_positions = [(x, y) for x in range(grid_cols) for y in range(grid_rows)]
 
+# Overlay menus
+menu_visible = True  # Make the menu visible initially or upon certain conditions
+show_rules = False
+
 cubes = []
 selected_cube = None
 start_game = False
 positions_correct = False  # Flag to indicate if the cube positions are correct
 current_round = 0
 message = ""
+start_game_button_rect = pygame.Rect(500, 500, 200, 50)  # Adjust position and size as needed
+
+def draw_menu(surface, mouse_pos):
+    if not menu_visible:
+        return  # Skip drawing the menu if it's not supposed to be visible
+    
+    # Dim background
+    overlay = pygame.Surface((1200, 1000), pygame.SRCALPHA)  # Adjust to your screen size
+    overlay.fill((0, 0, 0, 180))  # Semi-transparent black overlay
+    surface.blit(overlay, (0, 0))
+    
+    # Draw the menu box
+    menu_rect = pygame.Rect(400, 300, 400, 400)  # Adjust as needed
+    pygame.draw.rect(surface, (200, 200, 200), menu_rect)  # Light grey menu background
+
+    # Game title
+    title_surf, title_rect = title_font.render("Prismatic Puzzle", (0, 0, 0))
+    title_rect.center = (600, 350)  # Adjust as needed
+    surface.blit(title_surf, title_rect)
+    
+    # The rest of your menu drawing code...    # Determine button color based on mouse hover
+    button_color = (255, 0, 0) if start_game_button_rect.collidepoint(mouse_pos) else (0, 255, 0)    # Draw the "Start Game" button with dynamic color
+    pygame.draw.rect(surface, button_color, start_game_button_rect)
+    start_surf, start_rect =button_font.render("Start Game", (0, 0, 0))
+    start_rect.center = start_game_button_rect.center
+    surface.blit(start_surf, start_rect)
+
+def draw_rules_overlay(surface):
+    if show_rules:
+        # Draw a semi-transparent background
+        overlay = pygame.Surface((1200, 1000), pygame.SRCALPHA)
+        overlay.fill((0, 0, 0, 180))
+        surface.blit(overlay, (0, 0))
+
+        # Draw the rules box
+        rules_rect = pygame.Rect(400, 300, 400, 400)
+        pygame.draw.rect(surface, (200, 200, 200), rules_rect)
+
+        # Add your rules content and formatting here
+        rules_text = [
+            "Rules:",
+            "- Arrange cubes on the grid to match the correct positions.",
+            "- Click 'Submit' to check your solution.",
+            "- Click 'Next Round' to proceed to the next challenge.",
+            "- Complete all rounds to win the game.",
+            # Add more rules or instructions here
+        ]
+
+        y_offset = 350
+        for line in rules_text:
+            clue_font.render_to(surface, (420, y_offset), line, (0, 0, 0))
+            y_offset += 30
 
 def draw_cubes(surface):
     for cube in cubes:
@@ -63,15 +122,16 @@ def draw_buttons(surface):
         # Blit the text surface onto the screen
         surface.blit(text_surf, text_rect)
 
-    # Draw "Start" button
-    if not start_game:
-        draw_button(start_button_rect, "Start", True)
-    # Draw "Submit" button
     if start_game and not positions_correct:
         draw_button(check_button_rect, "Submit", True)
     # Draw "Next Round" button
     if positions_correct:
         draw_button(next_round_button_rect, "Next Round", True)
+
+    pygame.draw.rect(surface, button_color, rules_button_rect)
+    rules_surf, rules_rect = button_font.render("Rules", (0, 0, 0))
+    rules_rect.center = rules_button_rect.center
+    surface.blit(rules_surf, rules_rect)
 
 
 
@@ -159,11 +219,7 @@ def snap_cube_to_grid(cube):
 
 def handle_game_logic(event):
     global start_game, current_round, positions_correct
-    if start_button_rect.collidepoint(event.pos) and not start_game:
-        start_game = True
-        positions_correct = False
-        place_initial_cubes()
-    elif check_button_rect.collidepoint(event.pos) and start_game and not positions_correct:
+    if check_button_rect.collidepoint(event.pos) and start_game and not positions_correct:
         check_cubes_position()
     elif next_round_button_rect.collidepoint(event.pos) and positions_correct:
         if current_round < len(rounds_correct_positions) - 1:
@@ -174,12 +230,25 @@ def handle_game_logic(event):
         else:
             message = "Game Over! You've completed all rounds!"
 
+
+
 while True:
+    mouse_pos = pygame.mouse.get_pos()  # Get current mouse position
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
+            if start_game_button_rect.collidepoint(event.pos):
+                menu_visible = False  # Hide the menu only if "Start Game" is clicked
+                start_game = True
+                place_initial_cubes()
+                # No need for 'continue' as we want to process other events if needed
+
+
+            handle_game_logic(event)
+
             if not selected_cube:  # Only select a new cube if we aren't already dragging one
                 selected_cube = get_clicked_cube(event.pos)
                 if selected_cube:  # If a cube is selected, remove it from its grid position for free dragging
@@ -187,6 +256,14 @@ while True:
 
             # Handle button clicks separately from cube selection
             handle_game_logic(event)
+
+            # Check if the "Rules" button is clicked
+            if rules_button_rect.collidepoint(event.pos):
+                show_rules = not show_rules  # Toggle rules visibility
+                
+            elif show_rules and not rules_button_rect.collidepoint(event.pos):
+                # If the rules are shown and the click is outside the rules overlay, hide the rules
+                show_rules = False         
 
         elif event.type == pygame.MOUSEBUTTONUP:
             if selected_cube:
@@ -196,14 +273,17 @@ while True:
         elif event.type == pygame.MOUSEMOTION:
             if selected_cube:  # Move the selected cube with mouse
                 selected_cube['rect'].center = event.pos
-
+    
     screen.fill((0, 0, 0))
     draw_grid(screen)
     draw_buttons(screen)
     draw_clues(screen, CLUES)
     if start_game:
         draw_cubes(screen)
+    if show_rules:
+        draw_rules_overlay(screen)
     draw_message(screen, message)
+    draw_menu(screen, mouse_pos)
 
     pygame.display.update()
     clock.tick(60)
