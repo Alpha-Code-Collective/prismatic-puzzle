@@ -8,7 +8,7 @@ import random
 
 #from static import COLORS, CLUES, rounds_correct_positions, default_positions
 # The .static is for Windows users
-from .static import COLORS, CLUES, rounds_correct_positions, default_positions
+from static import COLORS, CLUES, rounds_correct_positions, default_positions
 
 pygame.init()
 screen_width, screen_height = 1200, 1000
@@ -21,7 +21,6 @@ title_font = pygame.freetype.SysFont("Arial", 36)
 button_font = pygame.freetype.SysFont("Arial", 24)
 clue_font = pygame.freetype.SysFont("Arial", 20)
 button_color = (0, 150, 0)
-
 
 
 button_width = 150
@@ -52,6 +51,7 @@ grid_positions = [(x, y) for x in range(grid_cols) for y in range(grid_rows)]
 # Overlay menus
 menu_visible = True  # Make the menu visible initially or upon certain conditions
 show_rules = False
+show_validate = False
 cubes = []
 selected_cube = None
 start_game = False
@@ -75,9 +75,9 @@ def draw_menu(surface, mouse_pos):
 
     # Game title
     title_surf, title_rect = title_font.render("Prismatic Puzzle", (0, 0, 0))
-    title_rect.center = (600, 350)  # Adjust as needed
+    title_rect.center = (600, 400)  # Adjust as needed
     surface.blit(title_surf, title_rect)
-    
+  
     # The rest of your menu drawing code...    # Determine button color based on mouse hover
     button_color = (255, 0, 0) if start_game_button_rect.collidepoint(mouse_pos) else (0, 255, 0)    # Draw the "Start Game" button with dynamic color
     pygame.draw.rect(surface, button_color, start_game_button_rect)
@@ -111,23 +111,55 @@ def draw_rules_overlay(surface):
             clue_font.render_to(surface, (420, y_offset), line, (0, 0, 0))
             y_offset += 30
 
+def draw_validation_overlay(surface, message):
+    if show_validate:
+        # Draw a semi-transparent background
+        overlay = pygame.Surface((1200, 1000), pygame.SRCALPHA)
+        overlay.fill((0, 0, 0, 180))
+        surface.blit(overlay, (0, 0))
+
+        # Draw the validation message box
+        message_rect = pygame.Rect(400, 300, 400, 400)
+        pygame.draw.rect(surface, (200, 200, 200), message_rect)
+
+        # Add your validation message and formatting here
+        if message == "Correct! Click 'Next Round' to continue.":
+            clue_font.render_to(surface, (400, 560), message, (0, 255, 0))
+        else:
+            clue_font.render_to(surface, (400, 560), message, (0, 0, 0))
+
 # Container settings
 container_height = 100  # Adjust height as needed
 container_y = screen.get_height() - container_height  # Position it at the bottom
 container_color = (100, 100, 100)  # A grey color, adjust as needed
 
+def draw_title(screen):
+    # Round title
+    title_surf, title_rect = title_font.render(f"Round {current_round + 1}", (0, 255, 0))
+    title_rect.center = (600, 210)  # Adjust as needed
+    screen.blit(title_surf, title_rect)
+
 def draw_container(surface):
     container_rect = pygame.Rect(0, container_y, screen.get_width(), container_height)
     pygame.draw.rect(surface, container_color, container_rect)
 
-
-
 def draw_cubes(surface):
+    cubes_to_draw = []
+
     for cube in cubes:
+        if cube is not selected_cube:
+            cubes_to_draw.append(cube)
+
+    for cube in cubes_to_draw:
         pygame.draw.rect(surface, cube['color'], cube['rect'])
-        # Render the color name text within the cube
         text_surf, text_rect = clue_font.render(cube['color_name'], (0, 0, 0))
         text_rect.center = cube['rect'].center
+        surface.blit(text_surf, text_rect)
+
+    if selected_cube:
+        pygame.draw.rect(surface, selected_cube['color'], selected_cube['rect'])
+        text_surf, text_rect = clue_font.render(selected_cube['color_name'], (0, 0, 0))
+        text_rect.center = selected_cube['rect'].center
         surface.blit(text_surf, text_rect)
 
 def draw_grid(surface):
@@ -251,10 +283,6 @@ def check_cubes_position():
     positions_correct = all(cube['grid_pos'] == cube['correct_pos'] for cube in cubes)
     message = "Correct! Click 'Next Round' to continue." if positions_correct else "Not quite right, try again."
 
-def draw_message(surface, message):
-    if message:
-        clue_font.render_to(surface, (400, 600), message, (0, 255, 0))
-
 def get_clicked_cube(pos):
     for cube in cubes:
         if cube['rect'].collidepoint(pos) and 'movable' in cube and cube['movable']:
@@ -333,7 +361,6 @@ while True:
                                 
                 # No need for 'continue' as we want to process other events if needed
 
-
             handle_game_logic(event)
 
             if not selected_cube:  # Only select a new cube if we aren't already dragging one
@@ -350,7 +377,14 @@ while True:
                 
             elif show_rules and not rules_button_rect.collidepoint(event.pos):
                 # If the rules are shown and the click is outside the rules overlay, hide the rules
-                show_rules = False         
+                show_rules = False
+####
+            # Check if the "Submit" button is clicked
+            if check_button_rect.collidepoint(event.pos):
+                show_validate = not show_validate  # Toggle rules visibility
+                
+            elif show_validate and not check_button_rect.collidepoint(event.pos):
+                show_validate = False           
 
         elif event.type == pygame.MOUSEBUTTONUP:
             if selected_cube:
@@ -363,6 +397,7 @@ while True:
     
     screen.fill((0, 0, 0))
     draw_grid(screen)
+    draw_title(screen)
     draw_container(screen)
     draw_buttons(screen)
     draw_clues(screen, CLUES)
@@ -371,7 +406,8 @@ while True:
         draw_cubes(screen)
     if show_rules:
         draw_rules_overlay(screen)
-    draw_message(screen, message)
+    if show_validate:
+        draw_validation_overlay(screen, message)    
     draw_menu(screen, mouse_pos)
 
     pygame.display.update()
