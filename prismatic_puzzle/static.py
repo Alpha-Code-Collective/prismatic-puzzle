@@ -82,7 +82,12 @@ default_positions = [
     # Round 1
     {
         'red': (3, 0), 'green': (1, 0), 'blue': (2, 0)
+    },
+    # Round 2
+    {
+        'pink': (0, 2), 'brown': (2, 0), 'indigo': (3, 2)
     }
+    ## Need all 10 rounds!!!
 ]
 
 rounds_correct_positions = [

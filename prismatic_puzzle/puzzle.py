@@ -2,11 +2,11 @@ import pygame
 import pygame.freetype
 from sys import exit
 import random
-# Assuming the static.py file is correctly placed relative to this script.
 from .static import COLORS, CLUES, rounds_correct_positions, default_positions
 
 pygame.init()
-screen = pygame.display.set_mode((1200, 1000))
+screen_width, screen_height = 1200, 1000
+screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Chroma Cube')
 clock = pygame.time.Clock()
 
@@ -14,15 +14,30 @@ clock = pygame.time.Clock()
 button_font = pygame.freetype.SysFont("Arial", 24)
 clue_font = pygame.freetype.SysFont("Arial", 20)
 button_color = (0, 150, 0)
-start_button_rect = pygame.Rect(425, 50, 150, 50)  # "Start" button
-check_button_rect = pygame.Rect(425, 150, 150, 50)  # "Submit" button
-next_round_button_rect = pygame.Rect(425, 250, 150, 50)  # "Next Round" button, shown after correct submission
+button_width = 150
+button_x = (screen_width - button_width) // 2
+start_button_y = 50  # Y position for the "Start" button
+check_button_y = 125  # Updated for clarity, providing more space between buttons
+next_round_button_y = 200  # Updated for clarity
+
+start_button_rect = pygame.Rect(button_x, start_button_y, button_width, 50)  # "Start" button
+check_button_rect = pygame.Rect(button_x, check_button_y, button_width, 50)  # "Submit" button
+next_round_button_rect = pygame.Rect(button_x, next_round_button_y, button_width, 50)  # "Next Round" button
+
 
 # Grid settings
-grid_origin = (450, 250)
 cell_size = 100
 grid_cols, grid_rows = 4, 3
+
+total_grid_width = grid_cols * cell_size
+total_grid_height = grid_rows * cell_size
+
+grid_origin_x = (screen_width - total_grid_width) // 2
+grid_origin_y = 250
+grid_origin = (grid_origin_x, grid_origin_y)
+
 grid_positions = [(x, y) for x in range(grid_cols) for y in range(grid_rows)]
+
 
 cubes = []
 selected_cube = None
@@ -30,6 +45,17 @@ start_game = False
 positions_correct = False  # Flag to indicate if the cube positions are correct
 current_round = 0
 message = ""
+
+# Container settings
+container_height = 100  # Adjust height as needed
+container_y = screen.get_height() - container_height  # Position it at the bottom
+container_color = (100, 100, 100)  # A grey color, adjust as needed
+
+def draw_container(surface):
+    container_rect = pygame.Rect(0, container_y, screen.get_width(), container_height)
+    pygame.draw.rect(surface, container_color, container_rect)
+
+
 
 def draw_cubes(surface):
     for cube in cubes:
@@ -58,9 +84,8 @@ def draw_buttons(surface):
 
         # If the button is active and mouse is hovered, simulate hover effect
         if is_active and rect.collidepoint(pygame.mouse.get_pos()):
-            pygame.draw.rect(surface, (0, 180, 0), rect, 0, 5)  # Adjust color for hover effect
+            pygame.draw.rect(surface, (0, 180, 0), rect, 0, 5) 
         
-        # Blit the text surface onto the screen
         surface.blit(text_surf, text_rect)
 
     # Draw "Start" button
@@ -71,20 +96,34 @@ def draw_buttons(surface):
         draw_button(check_button_rect, "Submit", True)
     # Draw "Next Round" button
     if positions_correct:
+        global cubes
+        cubes = []
         draw_button(next_round_button_rect, "Next Round", True)
 
 
 
 def draw_clues(surface, clues):
-    y_offset = 600
+    screen_width = 1200  # Assuming this is your screen width
+    y_offset = 600  # Starting Y position for clues
+    
     for clue in clues[current_round]:
-        clue_font.render_to(surface, (50, y_offset), clue, (255, 255, 255))
-        y_offset += 30
+        # Render the clue to an off-screen surface to get its size without displaying it
+        clue_surface, clue_rect = clue_font.render(clue, (255, 255, 255))
+        clue_width = clue_rect.width
+        
+        # Calculate the x position to center the clue
+        x_position = (screen_width - clue_width) // 2
+        
+        # Now render the clue to the actual surface at the calculated position
+        clue_font.render_to(surface, (x_position, y_offset), clue, (255, 255, 255))
+        y_offset += 30  # Increment y_offset for the next clue
+
 
 def place_initial_cubes():
     global cubes
-    cubes = []
-
+    if current_round >= len(default_positions):
+        print(f"Configuration for round {current_round} is missing.")
+        return
     # Starting positions for cubes on the grid for the current round
     starting_positions = default_positions[current_round]
 
@@ -101,7 +140,7 @@ def place_initial_cubes():
         })
 
     # Adjust starting Y position for the cubes placed off the grid to ensure visibility
-    off_grid_start_y = screen.get_height() - cell_size - 10
+    off_grid_start_y = container_y + (container_height - cell_size) // 2
 
     # Place remaining cubes off the grid, excluding those already placed
     placed_colors = starting_positions.keys()
@@ -122,16 +161,10 @@ def place_initial_cubes():
     # Note: Adjust x_offset increment and off_grid_start_y as needed based on your UI layout and total number of cubes
 
 
-
-
 def check_cubes_position():
     global positions_correct, message
-    if all(cube['grid_pos'] == cube['correct_pos'] for cube in cubes):
-        message = "Correct! Click 'Next Round' to continue."
-        positions_correct = True
-    else:
-        message = "Not quite right, try again."
-        positions_correct = False
+    positions_correct = all(cube['grid_pos'] == cube['correct_pos'] for cube in cubes)
+    message = "Correct! Click 'Next Round' to continue." if positions_correct else "Not quite right, try again."
 
 def draw_message(surface, message):
     if message:
@@ -199,9 +232,11 @@ while True:
 
     screen.fill((0, 0, 0))
     draw_grid(screen)
+    draw_container(screen)
     draw_buttons(screen)
     draw_clues(screen, CLUES)
     if start_game:
+        
         draw_cubes(screen)
     draw_message(screen, message)
 
