@@ -4,7 +4,7 @@ import pygame.mixer
 from pygame.locals import *
 from sys import exit
 import random
-
+import os
 
 # The .static is for Windows users
 from static import COLORS, CLUES, rounds_correct_positions, default_positions
@@ -17,7 +17,7 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Chroma Cube')
 clock = pygame.time.Clock()
 
-player_start_time = 0
+player_start_time = pygame.time.get_ticks()
 elapsed_time = 0
 
 # Music player
@@ -36,9 +36,17 @@ clue_font = pygame.freetype.SysFont("Arial", 20)
 button_color = (0, 150, 0)
 # Background Image
 background_images = [
-    pygame.image.load('prismatic_puzzle/background1.jpg').convert_alpha(),
-    pygame.image.load('prismatic_puzzle/background2.jpg').convert_alpha(),
-    pygame.image.load('prismatic_puzzle/background3.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background1.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background2.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background3.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background4.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background5.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background6.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background7.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background8.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background9.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background10.jpg').convert_alpha(),
+
 ]
 
 # Button Settings
@@ -130,6 +138,7 @@ def play_music(music_file, volume=0.2, loops=-1):
     pygame.mixer.music.play(loops=loops)
 
 
+
 music_playing = True  # Variable to track the music playing state
 play_music(music_file)
 
@@ -156,31 +165,49 @@ def draw_music_player_buttons(surface):
 
 def draw_menu(surface, mouse_pos):
     if not menu_visible:
-        return  # Skip drawing the menu if it's not supposed to be visible
-
-    # Dim background
-    # Adjust to your screen size
+        return
+    
     overlay = pygame.Surface((1200, 1000), pygame.SRCALPHA)
-    overlay.fill((0, 0, 0, 180))  # Semi-transparent black overlay
+    overlay.fill((0, 0, 0, 180))
     surface.blit(overlay, (0, 0))
+    
+    # Load and draw the logo
+    logo_path = os.path.join('prismatic_puzzle/assets', 'logo.png')  # Adjust the path as necessary
+    logo_image = pygame.image.load(logo_path)
+    new_width = 500
+    new_height = 500
+    logo_image = pygame.transform.scale(logo_image, (new_width, new_height))
+    logo_rect = logo_image.get_rect()
+    logo_rect.center = (600, 400)  # Adjust the position as necessary
+    
+    # Assuming you have your buttons defined somewhere above this function
+    buttons = [start_game_button_rect, quit_button_rect]
 
-    # Draw the menu box
-    menu_rect = pygame.Rect(400, 300, 400, 400)  # Adjust as needed
-    # Light grey menu background
-    pygame.draw.rect(surface, (200, 200, 200), menu_rect)
+    # Calculate the boundary of the logo and buttons
+    min_x = min(logo_rect.left, min(button.left for button in buttons))
+    max_x = max(logo_rect.right, max(button.right for button in buttons))
+    min_y = min(logo_rect.top, min(button.top for button in buttons))
+    max_y = max(logo_rect.bottom, max(button.bottom for button in buttons))
 
-    # Game title
-    title_surf, title_rect = title_font.render("Prismatic Puzzle", (0, 0, 0))
-    title_rect.center = (600, 400)  # Adjust as needed
-    surface.blit(title_surf, title_rect)
 
-    # The rest of your menu drawing code...    # Determine button color based on mouse hover
-    button_color = (255, 0, 0) if start_game_button_rect.collidepoint(
-        mouse_pos) else (0, 255, 0)    # Draw the "Start Game" button with dynamic color
-    pygame.draw.rect(surface, button_color, start_game_button_rect)
-    start_surf, start_rect = button_font.render("Start Game", (0, 0, 0))
-    start_rect.center = start_game_button_rect.center
-    surface.blit(start_surf, start_rect)
+    # Add some padding around the elements
+    padding = 20
+    menu_rect = pygame.Rect(min_x - padding, min_y - padding, max_x - min_x + 2*padding, max_y - min_y + 2*padding)
+    
+    # Draw the menu rectangle outline
+    pygame.draw.rect(surface, (200, 200, 200), menu_rect, 3)
+    
+    # Draw the logo
+    surface.blit(logo_image, logo_rect)
+  
+    # Draw buttons with dynamic background based on mouse hover
+    for button_rect, text in [(start_game_button_rect, "Start Game"), (quit_button_rect, "Quit")]:
+        color = (0, 255, 0) if button_rect.collidepoint(mouse_pos) else (255, 255, 255)
+        pygame.draw.rect(surface, color, button_rect)  # Fill background on hover
+        text_surf, text_rect = button_font.render(text, (0, 0, 0))
+        text_rect.center = button_rect.center
+        surface.blit(text_surf, text_rect)
+
 
 def draw_rules_overlay(surface):
     if show_rules:
@@ -219,7 +246,7 @@ def draw_validation_overlay(surface, message):
 
         # Draw the validation message box
         message_rect = pygame.Rect(250, 400, 700, 200)
-        pygame.draw.rect(surface, (200, 200, 200), message_rect)
+        pygame.draw.rect(surface, (200, 200, 200), message_rect, border_radius= 2)
 
         if current_round == 10 and message == "Correct! Click 'Next Round' to continue.":
             title_font.render_to(surface, (280, 540), f"Congratulations. You beat the game!", (117, 165, 35))
@@ -329,45 +356,44 @@ def play_game():
     if current_round >= len(default_positions):
         print(f"Configuration for round {current_round} is missing.")
         return
-    # Starting positions for cubes on the grid for the current round
+    cubes = [] 
     starting_positions = default_positions[current_round]
-
-    # Place the specified cubes on their starting positions on the grid
     for color_name, grid_pos in starting_positions.items():
         color_rgb = COLORS[color_name]
         cube_rect = pygame.Rect(grid_origin[0] + grid_pos[0] * cell_size,
                                 grid_origin[1] + grid_pos[1] * cell_size, cell_size, cell_size)
+        
+        is_movable = True if current_round == 9 else False
+
         cubes.append({
             'color': color_rgb,
             'rect': cube_rect,
             'grid_pos': grid_pos,
             'color_name': color_name,
-            'movable': False,  # Add this line to indicate the cube should not be moved
-            'correct_pos': rounds_correct_positions[current_round][color_name]
+            'movable': is_movable,
+            'correct_pos': rounds_correct_positions[current_round][color_name] 
         })
 
-    # Adjust starting Y position for the cubes placed off the grid to ensure visibility
     off_grid_start_y = container_y + (container_height - cell_size) // 2
 
-    # Place remaining cubes off the grid, excluding those already placed
     placed_colors = starting_positions.keys()
     x_offset = 50
     for color_name, correct_pos in rounds_correct_positions[current_round].items():
         if color_name not in placed_colors:
             color_rgb = COLORS[color_name]
-            cube_rect = pygame.Rect(
-                x_offset, off_grid_start_y, cell_size, cell_size)
+            cube_rect = pygame.Rect(x_offset, off_grid_start_y, cell_size, cell_size)
+            original_pos = (x_offset, off_grid_start_y)  
             cubes.append({
                 'color': color_rgb,
                 'rect': cube_rect,
-                'grid_pos': None,  # Indicates the cube is not on the grid
+                'grid_pos': None, 
                 'color_name': color_name,
                 'movable': True,
+                'original_pos': original_pos,
                 'correct_pos': correct_pos
             })
-            x_offset += cell_size + 10  # Adjust spacing to ensure cubes don't overlap
+            x_offset += cell_size + 10
 
-    # Note: Adjust x_offset increment and off_grid_start_y as needed based on your UI layout and total number of cubes
 
 def calculate_grid_position(center_pos):
     # Calculate grid position from pixel coordinates
@@ -412,32 +438,25 @@ def snap_cube_to_grid(cube):
         snap_cube_to_tray(cube)
 
 def snap_cube_to_tray(cube):
-    tray_start_x = 50  # Starting x-coordinate for cubes in the tray
-    # Center cubes vertically in the tray
-    tray_y = container_y + (container_height - cell_size) // 2
-    cube_spacing = 10  # Spacing between cubes
-
-    # Filter the list of cubes to only those not on the grid (i.e., in the tray)
-    tray_cubes = [c for c in cubes if c['grid_pos']
-                  is None and 'movable' in c and c['movable']]
-
-    # Find the index of this cube within the tray_cubes list
-    try:
-        index = tray_cubes.index(cube)
-    except ValueError:
-        # In case the cube is not yet in the tray_cubes list, append it
-        tray_cubes.append(cube)
-        index = len(tray_cubes) - 1
-
-    # Calculate the x-coordinate based on the index and spacing
-    # This ensures that each cube in the tray is placed next to the previous one without overlapping
-    cube_x = tray_start_x + index * (cell_size + cube_spacing)
-
-    # Update the cube's position to the calculated tray position
-    cube['rect'].topleft = (cube_x, tray_y)
+    if 'original_pos' in cube:
+        cube['rect'].topleft = cube['original_pos']
+    else:
+        # Handle the case where a cube might not have an original_pos for some reason
+        print("Cube does not have an original position.")
 
 # --------------------------Testing functions ---------------------------------------
+def autocomplete_cubes():
+    global cubes, positions_correct, message
+    # Update each cube's grid position to its correct position
+    for cube in cubes:
+        cube['grid_pos'] = cube['correct_pos']
+        # Also update the cube's rect position accordingly
+        cube_rect_x = grid_origin_x + cube['correct_pos'][0] * cell_size
+        cube_rect_y = grid_origin_y + cube['correct_pos'][1] * cell_size
+        cube['rect'].topleft = (cube_rect_x, cube_rect_y)
 
+#     positions_correct = True
+#     message = "Correct! Click 'Next Round' to continue."
 def skip_to_next_level():
     global current_round, start_game, positions_correct, cubes, message
     if current_round < len(rounds_correct_positions) - 1:
@@ -475,7 +494,7 @@ def go_to_previous_level():
     # menu_visible = False
 # --------------------------Testing functions END-------------------------------
 def check_time():
-    global positions_correct, message, elapsed_time
+    global positions_correct, message, elapsed_time, player_start_time
     correct_count = sum(cube['grid_pos'] == cube['correct_pos'] for cube in cubes)
     total_cubes = len(cubes)
     if message == f"Correct! Click 'Next Round' to continue.":
@@ -498,7 +517,7 @@ def handle_game_logic(event):
     elif next_round_button_rect.collidepoint(event.pos) and positions_correct:
         if current_round < len(rounds_correct_positions) - 1:
             current_round += 1
-            player_start_time = None
+            player_start_time = pygame.time.get_ticks()
             start_game = True
             positions_correct = False
             play_game()
@@ -519,10 +538,14 @@ while True:
                 undo_last_move()
                 continue
 
+
             if start_game_button_rect.collidepoint(event.pos):
+
                 menu_visible = False  # Hide the menu only if "Start Game" is clicked
                 start_game = True
-                # No need for 'continue' as we want to process other events if needed
+            elif quit_button_rect.collidepoint(event.pos):  # Check if the quit button was clicked
+                pygame.quit()
+                exit()
             handle_game_logic(event)
 
             if not selected_cube:  # Only select a new cube if we aren't already dragging one
@@ -562,6 +585,8 @@ while True:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_n:  # 'N' key for 'Next Level'
                 skip_to_next_level()
+            elif event.key == pygame.K_a:  # Assuming 'A' key for autocomplete
+                autocomplete_cubes()
             elif event.key == pygame.K_b:  # 'B' key for 'Previous Level'
                 go_to_previous_level()
         elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -569,10 +594,15 @@ while True:
                 toggle_music()
 
     screen.fill((0, 0, 0))
-    if 0 <= current_round - 1 < len(background_images):
+    if 0 <= current_round < len(background_images):
         current_background = background_images[current_round - 1]
+        image_width, image_height = current_background.get_size()
+        x_position = (screen_width - image_width) // 2
+        y_position = (screen_height - image_height) // 2
         current_background.set_alpha(100)
         screen.blit(current_background, (0, 0))
+
+
 
     draw_grid(screen)
     draw_title(screen)
