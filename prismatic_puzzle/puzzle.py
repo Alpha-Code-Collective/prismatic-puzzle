@@ -410,7 +410,18 @@ def snap_cube_to_tray(cube):
         print("Cube does not have an original position.")
 
 # --------------------------Testing functions ---------------------------------------
+def autocomplete_cubes():
+    global cubes, positions_correct, message
+    # Update each cube's grid position to its correct position
+    for cube in cubes:
+        cube['grid_pos'] = cube['correct_pos']
+        # Also update the cube's rect position accordingly
+        cube_rect_x = grid_origin_x + cube['correct_pos'][0] * cell_size
+        cube_rect_y = grid_origin_y + cube['correct_pos'][1] * cell_size
+        cube['rect'].topleft = (cube_rect_x, cube_rect_y)
 
+#     positions_correct = True
+#     message = "Correct! Click 'Next Round' to continue."
 def skip_to_next_level():
     global current_round, start_game, positions_correct, cubes, message
     if current_round < len(rounds_correct_positions) - 1:
@@ -533,6 +544,8 @@ while True:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_n:  # 'N' key for 'Next Level'
                 skip_to_next_level()
+            elif event.key == pygame.K_a:  # Assuming 'A' key for autocomplete
+                autocomplete_cubes()
             elif event.key == pygame.K_b:  # 'B' key for 'Previous Level'
                 go_to_previous_level()
 
