@@ -6,8 +6,8 @@ import random
 
 
 # The .static is for Windows users
-from .static import COLORS, CLUES, rounds_correct_positions, default_positions
-from .solution_logic import check_cubes_position
+from static import COLORS, CLUES, rounds_correct_positions, default_positions
+from solution_logic import check_cubes_position
 
 
 pygame.init()
@@ -444,7 +444,7 @@ def check_time():
     global positions_correct, message, elapsed_time
     correct_count = sum(cube['grid_pos'] == cube['correct_pos'] for cube in cubes)
     total_cubes = len(cubes)
-    if message == f"All correct! Click 'Next Round' to continue.":
+    if message == f"Correct! Click 'Next Round' to continue.":
         elapsed_time = (pygame.time.get_ticks() - player_start_time) / 1000  # Convert to seconds
     else:
         positions_correct = False
