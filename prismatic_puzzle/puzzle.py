@@ -3,7 +3,6 @@ import pygame.freetype
 import pygame.mixer
 from pygame.locals import *
 from sys import exit
-import random
 import os
 
 # The .static is for Windows users
@@ -58,6 +57,7 @@ check_button_y = 125  # Updated for clarity, providing more space between button
 next_round_button_y = 185  # Updated for clarity
 rules_button_y = 25
 # Buttons
+#---Round Buttons
 start_button_rect = pygame.Rect(
     button_x, start_button_y, button_width, 50)  # "Start" button
 check_button_rect = pygame.Rect(
@@ -65,8 +65,14 @@ check_button_rect = pygame.Rect(
 next_round_button_rect = pygame.Rect(
     button_x, next_round_button_y, button_width, 50)  # "Next Round" button
 rules_button_rect = pygame.Rect(button_x, rules_button_y, button_width, 50)
+#---Undo Buttons
 undo_button_rect = pygame.Rect(button_x + 300, 250, 100, 50)
 reset_button_rect = pygame.Rect(button_x + 300, 350, 100, 50)
+#---Music Buttons
+music_button_rect = pygame.Rect(50, 30, 100, 50)
+volume_up_button_rect = pygame.Rect(50, 100, 100, 50)
+volume_down_button_rect = pygame.Rect(50, 170, 100, 50)
+#---Beginning Buttons
 quit_button_rect = pygame.Rect(500, 600, 200, 50)
 buttons = [start_button_rect, quit_button_rect]  
 # Grid settings
@@ -128,15 +134,15 @@ def undo_last_move():
 
 # ----------------------Play Music-----------------------------------------
 
+
 # Music file path
 music_file = "prismatic_puzzle/assets/Restless_Bones.mp3"
+
 def play_music(music_file, volume=0.2, loops=-1):
     pygame.mixer.init()
     pygame.mixer.music.load(music_file)
     pygame.mixer.music.set_volume(volume)
-
     pygame.mixer.music.play(loops=loops)
-
 
 music_playing = True  # Variable to track the music playing state
 play_music(music_file)
@@ -150,16 +156,21 @@ def toggle_music():
         pygame.mixer.music.unpause()
         music_playing = True
 
+def increase_volume():
+    current_volume = pygame.mixer.music.get_volume()
+    if current_volume < 1.0:
+        new_volume = min(current_volume + 0.1, 1.0)  # Increase volume by 0.1 but limit to 1.0
+        pygame.mixer.music.set_volume(new_volume)
+
+def decrease_volume():
+    current_volume = pygame.mixer.music.get_volume()
+    if current_volume > 0.0:
+        new_volume = max(current_volume - 0.1, 0.0)  # Decrease volume by 0.1 but limit to 0.0
+        pygame.mixer.music.set_volume(new_volume)
+
+
 # ----------------------END Play Music-----------------------------------------
 # -------------------------------Draw functions-------------------------------------
-
-
-def draw_music_player_buttons(surface):
-    pygame.draw.rect(surface, (0, 150, 0), play_button)
-    pygame.draw.rect(surface, (0, 150, 0), pause_button)
-
-    surface.blit(play_text, (play_button.x + 15, play_button.y + 15))
-    surface.blit(pause_text, (pause_button.x + 8, pause_button.y + 15))
 
 
 def draw_menu(surface, mouse_pos):
@@ -318,16 +329,16 @@ def draw_buttons(surface):
         draw_button(reset_button_rect, "Reset", True)
         draw_button(undo_button_rect, "Undo", True)
         draw_button(check_button_rect, "Submit", True)
+        draw_button(rules_button_rect, "Rules", True)
+        draw_button(music_button_rect, "Music", True)
+        draw_button(volume_up_button_rect, "Vol +", True)
+        draw_button(volume_down_button_rect, "Vol -", True)
     # Draw "Next Round" button
     if positions_correct:
         global cubes
         cubes = []
         draw_button(next_round_button_rect, "Next Round", True)
 
-    pygame.draw.rect(surface, button_color, rules_button_rect, 0, 5)
-    rules_surf, rules_rect = button_font.render("Rules", (255, 255, 255))
-    rules_rect.center = rules_button_rect.center
-    surface.blit(rules_surf, rules_rect)
 
 def draw_clues(surface, clues):
     screen_width = 1200  # Assuming this is your screen width
@@ -537,15 +548,19 @@ while True:
                 undo_last_move()
                 continue
 
+            # ---- Landing Page Buttons --------
 
             if start_game_button_rect.collidepoint(event.pos):
-
                 menu_visible = False  # Hide the menu only if "Start Game" is clicked
                 start_game = True
             elif quit_button_rect.collidepoint(event.pos):  # Check if the quit button was clicked
                 pygame.quit()
                 exit()
+                
             handle_game_logic(event)
+
+            # ---- End Landing Page Buttons --------
+            # ---- Piece Select Listener --------
 
             if not selected_cube:  # Only select a new cube if we aren't already dragging one
                 selected_cube = get_clicked_cube(event.pos)
@@ -557,21 +572,32 @@ while True:
             # Handle button clicks separately from cube selection
             handle_game_logic(event)
 
-            # Check if the "Rules" button is clicked
+            # ---- End Piece Select Listener --------
+
+            # -----------Main Button Click listeners-------
+
+            # Click listeners - Rules
             if rules_button_rect.collidepoint(event.pos):
                 show_rules = not show_rules  # Toggle rules visibility
-
             elif show_rules and not rules_button_rect.collidepoint(event.pos):
-                # If the rules are shown and the click is outside the rules overlay, hide the rules
                 show_rules = False
 
-            # Check if the "Submit" button is clicked
+            # Click listeners - Submit
             if check_button_rect.collidepoint(event.pos):
                 show_validate = not show_validate  # Toggle rules visibility
-
             elif show_validate and not check_button_rect.collidepoint(event.pos):
                 show_validate = False
+            
+            # Click listeners - Music
+            if music_button_rect.collidepoint(event.pos):
+                toggle_music()
+            elif volume_up_button_rect.collidepoint(event.pos):
+                increase_volume()
+            elif volume_down_button_rect.collidepoint(event.pos):
+                decrease_volume()
 
+            # -----------End Main Button Click listeners-------
+                
         elif event.type == pygame.MOUSEBUTTONUP:
             if selected_cube:
                 snap_cube_to_grid(selected_cube)
@@ -581,6 +607,8 @@ while True:
             if selected_cube:  # Move the selected cube with mouse
                 selected_cube['rect'].center = event.pos
 
+        # -----------TESTING Level Skip Shortcuts-------
+                
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_n:  # 'N' key for 'Next Level'
                 skip_to_next_level()
@@ -588,9 +616,8 @@ while True:
                 autocomplete_cubes()
             elif event.key == pygame.K_b:  # 'B' key for 'Previous Level'
                 go_to_previous_level()
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if play_button.collidepoint(event.pos) or pause_button.collidepoint(event.pos):
-                toggle_music()
+
+        # -----------TESTING End Level Skip Shortcuts-------
 
     screen.fill((0, 0, 0))
     if 0 <= current_round < len(background_images):
@@ -609,6 +636,7 @@ while True:
     draw_buttons(screen)
     draw_clues(screen, CLUES)
 
+
     if start_game:
         draw_cubes(screen)
     if show_rules:
@@ -616,6 +644,5 @@ while True:
     if show_validate:
         draw_validation_overlay(screen, message)
     draw_menu(screen, mouse_pos)
-    draw_music_player_buttons(screen) 
     pygame.display.update()
     clock.tick(60)
