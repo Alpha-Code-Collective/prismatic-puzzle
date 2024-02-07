@@ -319,16 +319,13 @@ def draw_buttons(surface):
         draw_button(reset_button_rect, "Reset", True)
         draw_button(undo_button_rect, "Undo", True)
         draw_button(check_button_rect, "Submit", True)
+        draw_button(rules_button_rect, "Rules", True)
     # Draw "Next Round" button
     if positions_correct:
         global cubes
         cubes = []
         draw_button(next_round_button_rect, "Next Round", True)
 
-    pygame.draw.rect(surface, button_color, rules_button_rect, 0, 5)
-    rules_surf, rules_rect = button_font.render("Rules", (255, 255, 255))
-    rules_rect.center = rules_button_rect.center
-    surface.blit(rules_surf, rules_rect)
 
 def draw_clues(surface, clues):
     screen_width = 1200  # Assuming this is your screen width
