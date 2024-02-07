@@ -501,10 +501,12 @@ while True:
             if undo_button_rect.collidepoint(event.pos):
                 undo_last_move()
                 continue
-            if start_game_button_rect.collidepoint(event.pos):
+            elif start_game_button_rect.collidepoint(event.pos):
                 menu_visible = False  # Hide the menu only if "Start Game" is clicked
                 start_game = True
-                # No need for 'continue' as we want to process other events if needed
+            elif quit_button_rect.collidepoint(event.pos):  # Check if the quit button was clicked
+                pygame.quit()
+                exit()
             handle_game_logic(event)
 
             if not selected_cube:  # Only select a new cube if we aren't already dragging one
