@@ -6,8 +6,8 @@ import random
 import os
 
 # The .static is for Windows users
-from static import COLORS, CLUES, rounds_correct_positions, default_positions
-from solution_logic import check_cubes_position
+from .static import COLORS, CLUES, rounds_correct_positions, default_positions
+from .solution_logic import check_cubes_position
 
 
 pygame.init()
@@ -16,7 +16,7 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Chroma Cube')
 clock = pygame.time.Clock()
 
-player_start_time = 0
+player_start_time = pygame.time.get_ticks()
 elapsed_time = 0
 
 # GUI settings
@@ -211,7 +211,7 @@ def draw_validation_overlay(surface, message):
 
         # Draw the validation message box
         message_rect = pygame.Rect(250, 400, 700, 200)
-        pygame.draw.rect(surface, (200, 200, 200), message_rect)
+        pygame.draw.rect(surface, (200, 200, 200), message_rect, border_radius= 2)
 
         if current_round == 10 and message == "Correct! Click 'Next Round' to continue.":
             title_font.render_to(surface, (280, 540), f"Congratulations. You beat the game!", (117, 165, 35))
@@ -323,18 +323,20 @@ def place_initial_cubes():
         return
     cubes = [] 
     starting_positions = default_positions[current_round]
-
     for color_name, grid_pos in starting_positions.items():
         color_rgb = COLORS[color_name]
         cube_rect = pygame.Rect(grid_origin[0] + grid_pos[0] * cell_size,
                                 grid_origin[1] + grid_pos[1] * cell_size, cell_size, cell_size)
+        
+        is_movable = True if current_round == 9 else False
+
         cubes.append({
             'color': color_rgb,
             'rect': cube_rect,
             'grid_pos': grid_pos,
             'color_name': color_name,
-            'movable': False,  # Indicates the cube should not be moved
-            'correct_pos': rounds_correct_positions[current_round][color_name]
+            'movable': is_movable,
+            'correct_pos': rounds_correct_positions[current_round][color_name] 
         })
 
     off_grid_start_y = container_y + (container_height - cell_size) // 2
@@ -469,7 +471,7 @@ def handle_game_logic(event):
     elif next_round_button_rect.collidepoint(event.pos) and positions_correct:
         if current_round < len(rounds_correct_positions) - 1:
             current_round += 1
-            player_start_time = None
+            player_start_time = pygame.time.get_ticks()
             start_game = True
             positions_correct = False
             place_initial_cubes()
