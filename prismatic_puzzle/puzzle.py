@@ -6,8 +6,8 @@ import random
 
 
 # The .static is for Windows users
-from static import COLORS, CLUES, rounds_correct_positions, default_positions
-from solution_logic import check_cubes_position
+from .static import COLORS, CLUES, rounds_correct_positions, default_positions
+from .solution_logic import check_cubes_position
 
 
 pygame.init()
@@ -26,9 +26,17 @@ clue_font = pygame.freetype.SysFont("Arial", 20)
 button_color = (0, 150, 0)
 #Background Image
 background_images = [
-    pygame.image.load('prismatic_puzzle/background1.jpg').convert_alpha(),
-    pygame.image.load('prismatic_puzzle/background2.jpg').convert_alpha(),
-    pygame.image.load('prismatic_puzzle/background3.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background1.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background2.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background3.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background4.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background5.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background6.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background7.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background8.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background9.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background10.jpg').convert_alpha(),
+
 ]
 
 # Button Settings
@@ -115,7 +123,7 @@ def play_music(music_file, volume=0.2, loops=-1):
     pygame.mixer.music.play(loops=loops)
 
 # Call the function with the music file path and loop indefinitely
-play_music("prismatic_puzzle/Restless_Bones.mp3", volume=0.2, loops=-1)
+play_music("prismatic_puzzle/assets/Restless_Bones.mp3", volume=0.2, loops=-1)
 
 # Add this line to keep the program running and music playing
 # pygame.event.wait()
@@ -124,7 +132,6 @@ def draw_menu(surface, mouse_pos):
     if not menu_visible:
         return  # Skip drawing the menu if it's not supposed to be visible
 
-    # Dim background
     # Adjust to your screen size
     overlay = pygame.Surface((1200, 1000), pygame.SRCALPHA)
     overlay.fill((0, 0, 0, 180))  # Semi-transparent black overlay
@@ -441,7 +448,7 @@ def go_to_previous_level():
     # menu_visible = False
 # --------------------------Testing functions END-------------------------------
 def check_time():
-    global positions_correct, message, elapsed_time
+    global positions_correct, message, elapsed_time, player_start_time
     correct_count = sum(cube['grid_pos'] == cube['correct_pos'] for cube in cubes)
     total_cubes = len(cubes)
     if message == f"Correct! Click 'Next Round' to continue.":
@@ -530,10 +537,13 @@ while True:
                 go_to_previous_level()
 
     screen.fill((0, 0, 0))
-    if 0 <= current_round - 1 < len(background_images):
+    if 0 <= current_round < len(background_images):
         current_background = background_images[current_round - 1]
+        image_width, image_height = current_background.get_size()
+        x_position = (screen_width - image_width) // 2
+        y_position = (screen_height - image_height) // 2
         current_background.set_alpha(100)
-        screen.blit(current_background, (0, 0))
+        screen.blit(current_background, (x_position, y_position))
    
     draw_grid(screen)
     draw_title(screen)
