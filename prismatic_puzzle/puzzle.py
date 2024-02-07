@@ -438,12 +438,11 @@ def go_to_previous_level():
 # --------------------------Testing functions END-------------------------------
 
 def handle_game_logic(event):
-    global start_game, current_round, positions_correct, player_start_time
+    global start_game, current_round, positions_correct, player_start_time, cubes, move_history
     if check_button_rect.collidepoint(event.pos) and start_game and not positions_correct:
         positions_correct, message = check_cubes_position(cubes)
         check_cubes_position()
     elif reset_button_rect.collidepoint(event.pos):
-        global cubes, move_history
         cubes = []
         move_history = []
         place_initial_cubes()
