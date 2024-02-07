@@ -12,6 +12,9 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Chroma Cube')
 clock = pygame.time.Clock()
 
+player_start_time = 0
+elapsed_time = 0
+
 # GUI settings
 title_font = pygame.freetype.SysFont("Arial", 36)
 button_font = pygame.freetype.SysFont("Arial", 24)
@@ -25,7 +28,7 @@ button_width = 150
 button_x = (screen_width - button_width) // 2
 start_button_y = 50  # Y position for the "Start" button
 check_button_y = 125  # Updated for clarity, providing more space between buttons
-next_round_button_y = 200  # Updated for clarity
+next_round_button_y = 185  # Updated for clarity
 rules_button_y = 25
 # Buttons
 start_button_rect = pygame.Rect(button_x, start_button_y, button_width, 50)  # "Start" button
@@ -77,7 +80,7 @@ def undo_last_move():
         cube['rect'] = pygame.Rect(last_move['old_rect'])  # Re-apply the old rect
         cube['grid_pos'] = last_move['old_grid_pos']  # Re-apply the old grid position
 #-----------------------------Undo Settings and functions END------------------------
-        
+
 #-------------------------------Draw functions-------------------------------------
 def draw_menu(surface, mouse_pos):
     if not menu_visible:
@@ -112,13 +115,15 @@ def draw_rules_overlay(surface):
         surface.blit(overlay, (0, 0))
 
         # Draw the rules box
-        rules_rect = pygame.Rect(400, 300, 400, 400)
+        rules_rect = pygame.Rect(300, 200, 600, 600)
         pygame.draw.rect(surface, (200, 200, 200), rules_rect)
 
         # Add your rules content and formatting here
         rules_text = [
             "Rules:",
             "- Arrange cubes on the grid to match the correct positions.",
+            "- Clues are provided below the grid. Use logic to find",
+            "  the correct position for each piece.",
             "- Click 'Submit' to check your solution.",
             "- Click 'Next Round' to proceed to the next challenge.",
             "- Complete all rounds to win the game.",
@@ -127,7 +132,7 @@ def draw_rules_overlay(surface):
 
         y_offset = 350
         for line in rules_text:
-            clue_font.render_to(surface, (420, y_offset), line, (0, 0, 0))
+            clue_font.render_to(surface, (350, y_offset), line, (0, 0, 0))
             y_offset += 30
 
 
@@ -139,14 +144,15 @@ def draw_validation_overlay(surface, message):
         surface.blit(overlay, (0, 0))
 
         # Draw the validation message box
-        message_rect = pygame.Rect(400, 300, 400, 400)
+        message_rect = pygame.Rect(250, 400, 700, 200)
         pygame.draw.rect(surface, (200, 200, 200), message_rect)
 
         # Add your validation message and formatting here
-        if message == "Correct! Click 'Next Round' to continue.":
-            clue_font.render_to(surface, (400, 560), message, (0, 255, 0))
+        if message == "All correct! Click 'Next Round' to continue.":
+            title_font.render_to(surface, (280, 460), message, (117, 165, 35))
+            title_font.render_to(surface, (280, 500), f"You solved the round in {str(elapsed_time)} seconds", (117, 165, 35))
         else:
-            clue_font.render_to(surface, (400, 560), message, (0, 0, 0))
+            title_font.render_to(surface, (300, 490), message, (0, 0, 0))
 
 def draw_title(screen):
     # Round title
@@ -210,8 +216,8 @@ def draw_buttons(surface):
         cubes = []
         draw_button(next_round_button_rect, "Next Round", True)
 
-    pygame.draw.rect(surface, button_color, rules_button_rect)
-    rules_surf, rules_rect = button_font.render("Rules", (0, 0, 0))
+    pygame.draw.rect(surface, button_color, rules_button_rect, 0, 5)
+    rules_surf, rules_rect = button_font.render("Rules", (255, 255, 255))
     rules_rect.center = rules_button_rect.center
     surface.blit(rules_surf, rules_rect)
 
@@ -233,9 +239,6 @@ def draw_clues(surface, clues):
         clue_font.render_to(surface, (x_position, y_offset), clue, (255, 255, 255))
         y_offset += 30  # Increment y_offset for the next clue
 
-def draw_message(surface, message):
-    if message:
-        clue_font.render_to(surface, (400, 600), message, (0, 255, 0))
 #-------------------------------Draw functions END-------------------------------------
 
 def place_initial_cubes():
@@ -300,9 +303,16 @@ def calculate_grid_position(center_pos):
 
 
 def check_cubes_position():
-    global positions_correct, message
-    positions_correct = all(cube['grid_pos'] == cube['correct_pos'] for cube in cubes)
-    message = "Correct! Click 'Next Round' to continue." if positions_correct else "Not quite right, try again."
+    global positions_correct, message, elapsed_time
+    correct_count = sum(cube['grid_pos'] == cube['correct_pos'] for cube in cubes)
+    total_cubes = len(cubes)
+    if correct_count == total_cubes:
+        positions_correct = True
+        message = f"All correct! Click 'Next Round' to continue."
+        elapsed_time = (pygame.time.get_ticks() - player_start_time) / 1000  # Convert to seconds
+    else:
+        positions_correct = False
+        message = f"You got {correct_count} out of {total_cubes} correct. Try again."        
 
 def get_clicked_cube(pos):
     for cube in cubes:
@@ -387,12 +397,13 @@ def go_to_previous_level():
 # --------------------------Testing functions END-------------------------------
 
 def handle_game_logic(event):
-    global start_game, current_round, positions_correct
+    global start_game, current_round, positions_correct, player_start_time
     if check_button_rect.collidepoint(event.pos) and start_game and not positions_correct:
         check_cubes_position()
     elif next_round_button_rect.collidepoint(event.pos) and positions_correct:
         if current_round < len(rounds_correct_positions) - 1:
             current_round += 1
+            player_start_time = None
             start_game = True
             positions_correct = False
             place_initial_cubes()
@@ -459,6 +470,7 @@ while True:
             elif event.key == pygame.K_b:  # 'B' key for 'Previous Level'
                 go_to_previous_level()
     
+
     screen.fill((0, 0, 0))
     draw_grid(screen)
     draw_title(screen)
@@ -471,8 +483,10 @@ while True:
     if show_rules:
         draw_rules_overlay(screen)
     if show_validate:
-        draw_validation_overlay(screen, message)    
+        draw_validation_overlay(screen, message)   
     draw_menu(screen, mouse_pos)
 
     pygame.display.update()
     clock.tick(60)
+
+
