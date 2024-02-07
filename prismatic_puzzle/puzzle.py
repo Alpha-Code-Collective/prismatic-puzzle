@@ -302,10 +302,9 @@ def place_initial_cubes():
     if current_round >= len(default_positions):
         print(f"Configuration for round {current_round} is missing.")
         return
-    # Starting positions for cubes on the grid for the current round
+    cubes = [] 
     starting_positions = default_positions[current_round]
 
-    # Place the specified cubes on their starting positions on the grid
     for color_name, grid_pos in starting_positions.items():
         color_rgb = COLORS[color_name]
         cube_rect = pygame.Rect(grid_origin[0] + grid_pos[0] * cell_size,
@@ -315,32 +314,30 @@ def place_initial_cubes():
             'rect': cube_rect,
             'grid_pos': grid_pos,
             'color_name': color_name,
-            'movable': False,  # Add this line to indicate the cube should not be moved
+            'movable': False,  # Indicates the cube should not be moved
             'correct_pos': rounds_correct_positions[current_round][color_name]
         })
 
-    # Adjust starting Y position for the cubes placed off the grid to ensure visibility
     off_grid_start_y = container_y + (container_height - cell_size) // 2
 
-    # Place remaining cubes off the grid, excluding those already placed
     placed_colors = starting_positions.keys()
     x_offset = 50
     for color_name, correct_pos in rounds_correct_positions[current_round].items():
         if color_name not in placed_colors:
             color_rgb = COLORS[color_name]
-            cube_rect = pygame.Rect(
-                x_offset, off_grid_start_y, cell_size, cell_size)
+            cube_rect = pygame.Rect(x_offset, off_grid_start_y, cell_size, cell_size)
+            original_pos = (x_offset, off_grid_start_y)  
             cubes.append({
                 'color': color_rgb,
                 'rect': cube_rect,
-                'grid_pos': None,  # Indicates the cube is not on the grid
+                'grid_pos': None, 
                 'color_name': color_name,
                 'movable': True,
+                'original_pos': original_pos,
                 'correct_pos': correct_pos
             })
-            x_offset += cell_size + 10  # Adjust spacing to ensure cubes don't overlap
+            x_offset += cell_size + 10
 
-    # Note: Adjust x_offset increment and off_grid_start_y as needed based on your UI layout and total number of cubes
 
 def calculate_grid_position(center_pos):
     # Calculate grid position from pixel coordinates
@@ -385,29 +382,11 @@ def snap_cube_to_grid(cube):
         snap_cube_to_tray(cube)
 
 def snap_cube_to_tray(cube):
-    tray_start_x = 50  # Starting x-coordinate for cubes in the tray
-    # Center cubes vertically in the tray
-    tray_y = container_y + (container_height - cell_size) // 2
-    cube_spacing = 10  # Spacing between cubes
-
-    # Filter the list of cubes to only those not on the grid (i.e., in the tray)
-    tray_cubes = [c for c in cubes if c['grid_pos']
-                  is None and 'movable' in c and c['movable']]
-
-    # Find the index of this cube within the tray_cubes list
-    try:
-        index = tray_cubes.index(cube)
-    except ValueError:
-        # In case the cube is not yet in the tray_cubes list, append it
-        tray_cubes.append(cube)
-        index = len(tray_cubes) - 1
-
-    # Calculate the x-coordinate based on the index and spacing
-    # This ensures that each cube in the tray is placed next to the previous one without overlapping
-    cube_x = tray_start_x + index * (cell_size + cube_spacing)
-
-    # Update the cube's position to the calculated tray position
-    cube['rect'].topleft = (cube_x, tray_y)
+    if 'original_pos' in cube:
+        cube['rect'].topleft = cube['original_pos']
+    else:
+        # Handle the case where a cube might not have an original_pos for some reason
+        print("Cube does not have an original position.")
 
 # --------------------------Testing functions ---------------------------------------
 
