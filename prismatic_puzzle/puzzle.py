@@ -187,9 +187,11 @@ def draw_validation_overlay(surface, message):
         message_rect = pygame.Rect(250, 400, 700, 200)
         pygame.draw.rect(surface, (200, 200, 200), message_rect)
 
-        # Add your validation message and formatting here
-        if current_round == 10:
+        if current_round == 10 and message == "Correct! Click 'Next Round' to continue.":
             title_font.render_to(surface, (280, 540), f"Congratulations. You beat the game!", (117, 165, 35))
+            title_font.render_to(surface, (280, 540), f"You solved the round in {str(elapsed_time)} seconds", (117, 165, 35))
+        elif message == "Correct! Click 'Next Round' to continue.":
+            title_font.render_to(surface, (300, 490), message, (0, 0, 0))
             title_font.render_to(surface, (280, 540), f"You solved the round in {str(elapsed_time)} seconds", (117, 165, 35))
         else:
             title_font.render_to(surface, (300, 490), message, (0, 0, 0))
@@ -438,12 +440,23 @@ def go_to_previous_level():
     # Optionally, if you want to hide the menu when going back to the previous level
     # menu_visible = False
 # --------------------------Testing functions END-------------------------------
+def check_time():
+    global positions_correct, message, elapsed_time
+    correct_count = sum(cube['grid_pos'] == cube['correct_pos'] for cube in cubes)
+    total_cubes = len(cubes)
+    if message == f"All correct! Click 'Next Round' to continue.":
+        elapsed_time = (pygame.time.get_ticks() - player_start_time) / 1000  # Convert to seconds
+    else:
+        positions_correct = False
+        message = f"You got {correct_count} out of {total_cubes} correct. Try again."  
 
 def handle_game_logic(event):
-    global start_game, current_round, positions_correct, player_start_time, cubes, move_history, message
+    global start_game, current_round, positions_correct, player_start_time, cubes, move_history, message, elapsed_time
     if check_button_rect.collidepoint(event.pos) and start_game and not positions_correct:
         positions_correct, message = check_cubes_position(cubes)
         check_cubes_position(cubes)
+        check_time()
+    
     elif reset_button_rect.collidepoint(event.pos):
         cubes = []
         move_history = []
