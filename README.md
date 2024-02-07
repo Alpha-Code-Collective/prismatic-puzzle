@@ -12,11 +12,11 @@
 
 ### How to initialize/run your application (where applicable)
 
-- If on a windows computer, do this:
+- If on a mac computer, change line 9 to this:
+    - from static import COLORS, CLUES, rounds_correct_positions
     - run python -m prismatic_puzzle.puzzle
-- If on a mac computer, do this:
-    - In puzzle.py file, replace line 6 with this code: 
-    from .static import COLORS, CLUES, rounds_correct_positions
+- If on a windows computer, change line 9 to this:
+    - from .static import COLORS, CLUES, rounds_correct_positions  
     - run python -m prismatic_puzzle.puzzle 
 
 ### Tests
