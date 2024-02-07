@@ -4,10 +4,10 @@ import pygame.mixer
 from sys import exit
 import random
 
-# from static import COLORS, CLUES, rounds_correct_positions, default_positions
+
 # The .static is for Windows users
-from .static import COLORS, CLUES, rounds_correct_positions, default_positions
-from .solution_logic import check_cubes_position
+from static import COLORS, CLUES, rounds_correct_positions, default_positions
+from solution_logic import check_cubes_position
 
 
 pygame.init()
@@ -49,6 +49,8 @@ next_round_button_rect = pygame.Rect(
 rules_button_rect = pygame.Rect(button_x, rules_button_y, button_width, 50)
 undo_button_rect = pygame.Rect(button_x + 300, 250, 100, 50)
 reset_button_rect = pygame.Rect(button_x + 300, 350, 100, 50)
+quit_button_rect = pygame.Rect(500, 600, 200, 50)
+buttons = [start_button_rect, quit_button_rect]  
 # Grid settings
 cell_size = 100
 grid_cols, grid_rows = 4, 3
@@ -185,9 +187,11 @@ def draw_validation_overlay(surface, message):
         message_rect = pygame.Rect(250, 400, 700, 200)
         pygame.draw.rect(surface, (200, 200, 200), message_rect)
 
-        # Add your validation message and formatting here
-        if current_round == 10:
+        if current_round == 10 and message == "Correct! Click 'Next Round' to continue.":
             title_font.render_to(surface, (280, 540), f"Congratulations. You beat the game!", (117, 165, 35))
+            title_font.render_to(surface, (280, 540), f"You solved the round in {str(elapsed_time)} seconds", (117, 165, 35))
+        elif message == "Correct! Click 'Next Round' to continue.":
+            title_font.render_to(surface, (300, 490), message, (0, 0, 0))
             title_font.render_to(surface, (280, 540), f"You solved the round in {str(elapsed_time)} seconds", (117, 165, 35))
         else:
             title_font.render_to(surface, (300, 490), message, (0, 0, 0))
@@ -436,21 +440,30 @@ def go_to_previous_level():
     # Optionally, if you want to hide the menu when going back to the previous level
     # menu_visible = False
 # --------------------------Testing functions END-------------------------------
+def check_time():
+    global positions_correct, message, elapsed_time
+    correct_count = sum(cube['grid_pos'] == cube['correct_pos'] for cube in cubes)
+    total_cubes = len(cubes)
+    if message == f"Correct! Click 'Next Round' to continue.":
+        elapsed_time = (pygame.time.get_ticks() - player_start_time) / 1000  # Convert to seconds
+    else:
+        positions_correct = False
+        message = f"You got {correct_count} out of {total_cubes} correct. Try again."  
 
 def handle_game_logic(event):
-    global start_game, current_round, positions_correct, player_start_time
+    global start_game, current_round, positions_correct, player_start_time, cubes, move_history, message, elapsed_time
     if check_button_rect.collidepoint(event.pos) and start_game and not positions_correct:
         positions_correct, message = check_cubes_position(cubes)
-        check_cubes_position()
+        check_cubes_position(cubes)
+        check_time()
+    
     elif reset_button_rect.collidepoint(event.pos):
-        global cubes, move_history
         cubes = []
         move_history = []
         place_initial_cubes()
     elif next_round_button_rect.collidepoint(event.pos) and positions_correct:
         if current_round < len(rounds_correct_positions) - 1:
             current_round += 1
-            screen.blit(background_image2, (0,0))
             player_start_time = None
             start_game = True
             positions_correct = False
@@ -473,12 +486,7 @@ while True:
             if start_game_button_rect.collidepoint(event.pos):
                 menu_visible = False  # Hide the menu only if "Start Game" is clicked
                 start_game = True
-
-
-
                 # No need for 'continue' as we want to process other events if needed
-
-
             handle_game_logic(event)
 
             if not selected_cube:  # Only select a new cube if we aren't already dragging one
@@ -515,7 +523,6 @@ while True:
             if selected_cube:  # Move the selected cube with mouse
                 selected_cube['rect'].center = event.pos
 
-
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_n:  # 'N' key for 'Next Level'
                 skip_to_next_level()
@@ -523,9 +530,10 @@ while True:
                 go_to_previous_level()
 
     screen.fill((0, 0, 0))
-    current_background = background_images[current_round - 1]
-    current_background.set_alpha(100)
-    screen.blit(current_background, (0,0))
+    if 0 <= current_round - 1 < len(background_images):
+        current_background = background_images[current_round - 1]
+        current_background.set_alpha(100)
+        screen.blit(current_background, (0, 0))
    
     draw_grid(screen)
     draw_title(screen)
