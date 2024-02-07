@@ -540,5 +540,6 @@ while True:
     if show_validate:
         draw_validation_overlay(screen, message)
     draw_menu(screen, mouse_pos)
+
     pygame.display.update()
     clock.tick(60)
