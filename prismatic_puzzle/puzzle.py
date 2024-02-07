@@ -4,11 +4,6 @@ import pygame.mixer
 from sys import exit
 import random
 
-import os
-#from static import COLORS, CLUES, rounds_correct_positions, default_positions
-
-
-# from static import COLORS, CLUES, rounds_correct_positions, default_positions
 
 # The .static is for Windows users
 from .static import COLORS, CLUES, rounds_correct_positions, default_positions
@@ -56,8 +51,6 @@ undo_button_rect = pygame.Rect(button_x + 300, 250, 100, 50)
 reset_button_rect = pygame.Rect(button_x + 300, 350, 100, 50)
 quit_button_rect = pygame.Rect(500, 600, 200, 50)
 buttons = [start_button_rect, quit_button_rect]  
-
-
 # Grid settings
 cell_size = 100
 grid_cols, grid_rows = 4, 3
@@ -129,54 +122,6 @@ play_music("prismatic_puzzle/Restless_Bones.mp3", volume=0.2, loops=-1)
 
 def draw_menu(surface, mouse_pos):
     if not menu_visible:
-
-        return
-    
-    overlay = pygame.Surface((1200, 1000), pygame.SRCALPHA)
-    overlay.fill((0, 0, 0, 180))
-    surface.blit(overlay, (0, 0))
-    
-    # Load and draw the logo
-    logo_path = os.path.join('prismatic_puzzle/assets', 'logo.png')  # Adjust the path as necessary
-    logo_image = pygame.image.load(logo_path)
-    new_width = 500
-    new_height = 500
-    logo_image = pygame.transform.scale(logo_image, (new_width, new_height))
-    logo_rect = logo_image.get_rect()
-    logo_rect.center = (600, 400)  # Adjust the position as necessary
-    
-    # Assuming you have your buttons defined somewhere above this function
-    buttons = [start_game_button_rect, quit_button_rect]
-
-    # Calculate the boundary of the logo and buttons
-    min_x = min(logo_rect.left, min(button.left for button in buttons))
-    max_x = max(logo_rect.right, max(button.right for button in buttons))
-    min_y = min(logo_rect.top, min(button.top for button in buttons))
-    max_y = max(logo_rect.bottom, max(button.bottom for button in buttons))
-
-    # Add some padding around the elements
-    padding = 20
-    menu_rect = pygame.Rect(min_x - padding, min_y - padding, max_x - min_x + 2*padding, max_y - min_y + 2*padding)
-    
-    # Draw the menu rectangle outline
-    pygame.draw.rect(surface, (200, 200, 200), menu_rect, 3)
-    
-    # Draw the logo
-    surface.blit(logo_image, logo_rect)
-  
-    # Draw buttons with dynamic background based on mouse hover
-    for button_rect, text in [(start_game_button_rect, "Start Game"), (quit_button_rect, "Quit")]:
-        color = (0, 255, 0) if button_rect.collidepoint(mouse_pos) else (255, 255, 255)
-        # Draw the button rectangle with rounded corners
-        pygame.draw.rect(surface, color, button_rect, border_radius=10)  # Adjust the border_radius as needed
-
-        text_surf, text_rect = button_font.render(text, (0, 0, 0))
-        text_rect.center = button_rect.center
-        surface.blit(text_surf, text_rect)
-
-
-
-
         return  # Skip drawing the menu if it's not supposed to be visible
 
     # Dim background
@@ -202,7 +147,6 @@ def draw_menu(surface, mouse_pos):
     start_surf, start_rect = button_font.render("Start Game", (0, 0, 0))
     start_rect.center = start_game_button_rect.center
     surface.blit(start_surf, start_rect)
-
 
 def draw_rules_overlay(surface):
     if show_rules:
@@ -456,15 +400,6 @@ def snap_cube_to_tray(cube):
     # Update the cube's position to the calculated tray position
     cube['rect'].topleft = (cube_x, tray_y)
 
-def handle_mouse_click(mouse_pos):
-    global menu_visible, start_game
-    if start_game_button_rect.collidepoint(mouse_pos):
-        menu_visible = False
-        start_game = True
-    elif quit_button_rect.collidepoint(mouse_pos):
-        pygame.quit()
-        exit()
-
 # --------------------------Testing functions ---------------------------------------
 
 def skip_to_next_level():
@@ -505,10 +440,10 @@ def go_to_previous_level():
 # --------------------------Testing functions END-------------------------------
 
 def handle_game_logic(event):
-    global start_game, current_round, positions_correct, player_start_time, cubes, move_history
+    global start_game, current_round, positions_correct, player_start_time, cubes, move_history, message
     if check_button_rect.collidepoint(event.pos) and start_game and not positions_correct:
         positions_correct, message = check_cubes_position(cubes)
-        check_cubes_position()
+        check_cubes_position(cubes)
     elif reset_button_rect.collidepoint(event.pos):
         cubes = []
         move_history = []
@@ -516,7 +451,6 @@ def handle_game_logic(event):
     elif next_round_button_rect.collidepoint(event.pos) and positions_correct:
         if current_round < len(rounds_correct_positions) - 1:
             current_round += 1
-            screen.blit(background_image2, (0,0))
             player_start_time = None
             start_game = True
             positions_correct = False
@@ -539,12 +473,7 @@ while True:
             if start_game_button_rect.collidepoint(event.pos):
                 menu_visible = False  # Hide the menu only if "Start Game" is clicked
                 start_game = True
-
-
-
                 # No need for 'continue' as we want to process other events if needed
-
-
             handle_game_logic(event)
 
             if not selected_cube:  # Only select a new cube if we aren't already dragging one
@@ -580,7 +509,6 @@ while True:
         elif event.type == pygame.MOUSEMOTION:
             if selected_cube:  # Move the selected cube with mouse
                 selected_cube['rect'].center = event.pos
-
 
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_n:  # 'N' key for 'Next Level'
