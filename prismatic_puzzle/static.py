@@ -132,7 +132,7 @@ default_positions = [
         "Orange": (2, 0),
         "Emerald": (0, 1),
         "Teal": (2, 1),
-        "Purple": (2, 3),
+        "Purple": (2, 2),
         "Cobalt": (3, 2),
         "White": (3, 1),
     },
@@ -140,8 +140,8 @@ default_positions = [
     {
         "Coral": (1, 2),
         "Emerald": (2, 1),
-        "Teal": (1, 3),
-        "White": (2, 3),
+        "Teal": (3, 2),
+        "White": (3, 1),
         "Grey": (0, 1),
     },
     # round 7
@@ -243,7 +243,7 @@ rounds_correct_positions = [
         "Cobalt": (3, 2),
         "Mustard": (1, 1),
         "Orange": (2, 0),
-        "Purple": (2, 3),
+        "Purple": (2, 2),
         "Magenta": (1, 0),
         "Brown": (0, 0),
         "Mint": (1, 2),
