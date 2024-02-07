@@ -3,11 +3,11 @@ import pygame.freetype
 import pygame.mixer
 from sys import exit
 import random
-
+import os
 
 # The .static is for Windows users
-from .static import COLORS, CLUES, rounds_correct_positions, default_positions
-from .solution_logic import check_cubes_position
+from static import COLORS, CLUES, rounds_correct_positions, default_positions
+from solution_logic import check_cubes_position
 
 
 pygame.init()
@@ -130,30 +130,49 @@ play_music("prismatic_puzzle/assets/Restless_Bones.mp3", volume=0.2, loops=-1)
 
 def draw_menu(surface, mouse_pos):
     if not menu_visible:
-        return  # Skip drawing the menu if it's not supposed to be visible
-
-    # Adjust to your screen size
+        return
+    
     overlay = pygame.Surface((1200, 1000), pygame.SRCALPHA)
-    overlay.fill((0, 0, 0, 180))  # Semi-transparent black overlay
+    overlay.fill((0, 0, 0, 180))
     surface.blit(overlay, (0, 0))
+    
+    # Load and draw the logo
+    logo_path = os.path.join('prismatic_puzzle/assets', 'logo.png')  # Adjust the path as necessary
+    logo_image = pygame.image.load(logo_path)
+    new_width = 500
+    new_height = 500
+    logo_image = pygame.transform.scale(logo_image, (new_width, new_height))
+    logo_rect = logo_image.get_rect()
+    logo_rect.center = (600, 400)  # Adjust the position as necessary
+    
+    # Assuming you have your buttons defined somewhere above this function
+    buttons = [start_game_button_rect, quit_button_rect]
 
-    # Draw the menu box
-    menu_rect = pygame.Rect(400, 300, 400, 400)  # Adjust as needed
-    # Light grey menu background
-    pygame.draw.rect(surface, (200, 200, 200), menu_rect)
+    # Calculate the boundary of the logo and buttons
+    min_x = min(logo_rect.left, min(button.left for button in buttons))
+    max_x = max(logo_rect.right, max(button.right for button in buttons))
+    min_y = min(logo_rect.top, min(button.top for button in buttons))
+    max_y = max(logo_rect.bottom, max(button.bottom for button in buttons))
 
-    # Game title
-    title_surf, title_rect = title_font.render("Prismatic Puzzle", (0, 0, 0))
-    title_rect.center = (600, 400)  # Adjust as needed
-    surface.blit(title_surf, title_rect)
 
-    # The rest of your menu drawing code...    # Determine button color based on mouse hover
-    button_color = (255, 0, 0) if start_game_button_rect.collidepoint(
-        mouse_pos) else (0, 255, 0)    # Draw the "Start Game" button with dynamic color
-    pygame.draw.rect(surface, button_color, start_game_button_rect)
-    start_surf, start_rect = button_font.render("Start Game", (0, 0, 0))
-    start_rect.center = start_game_button_rect.center
-    surface.blit(start_surf, start_rect)
+    # Add some padding around the elements
+    padding = 20
+    menu_rect = pygame.Rect(min_x - padding, min_y - padding, max_x - min_x + 2*padding, max_y - min_y + 2*padding)
+    
+    # Draw the menu rectangle outline
+    pygame.draw.rect(surface, (200, 200, 200), menu_rect, 3)
+    
+    # Draw the logo
+    surface.blit(logo_image, logo_rect)
+  
+    # Draw buttons with dynamic background based on mouse hover
+    for button_rect, text in [(start_game_button_rect, "Start Game"), (quit_button_rect, "Quit")]:
+        color = (0, 255, 0) if button_rect.collidepoint(mouse_pos) else (255, 255, 255)
+        pygame.draw.rect(surface, color, button_rect)  # Fill background on hover
+        text_surf, text_rect = button_font.render(text, (0, 0, 0))
+        text_rect.center = button_rect.center
+        surface.blit(text_surf, text_rect)
+
 
 def draw_rules_overlay(surface):
     if show_rules:
