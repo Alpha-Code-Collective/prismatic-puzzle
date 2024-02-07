@@ -6,9 +6,8 @@ import random
 import os
 
 # The .static is for Windows users
-from static import COLORS, CLUES, rounds_correct_positions, default_positions
-from solution_logic import check_cubes_position
-
+from .static import COLORS, CLUES, rounds_correct_positions, default_positions
+from .solution_logic import check_cubes_position
 
 pygame.init()
 screen_width, screen_height = 1200, 1000
@@ -36,11 +35,9 @@ background_images = [
     pygame.image.load('prismatic_puzzle/assets/background8.jpg').convert_alpha(),
     pygame.image.load('prismatic_puzzle/assets/background9.jpg').convert_alpha(),
     pygame.image.load('prismatic_puzzle/assets/background10.jpg').convert_alpha(),
-
 ]
 
 # Button Settings
-
 button_width = 150
 button_x = (screen_width - button_width) // 2
 start_button_y = 50  # Y position for the "Start" button
@@ -90,7 +87,6 @@ start_game_button_rect = pygame.Rect(500, 500, 200, 50)
 
 move_history = []
 # ----------------------------Undo functions--------------------
-
 def record_move(cube, old_rect, old_grid_pos):
     move = {
         'cube': cube,
@@ -113,7 +109,6 @@ def undo_last_move():
         cube['grid_pos'] = last_move['old_grid_pos']  # Re-apply the old grid position
 #-----------------------------Undo functions END------------------------
 
-#-------------------------------Draw functions-------------------------------------
 
 def play_music(music_file, volume=0.2, loops=-1):
     pygame.mixer.init()
@@ -127,6 +122,7 @@ play_music("prismatic_puzzle/assets/Restless_Bones.mp3", volume=0.2, loops=-1)
 
 # Add this line to keep the program running and music playing
 # pygame.event.wait()
+#-------------------------------Draw functions-------------------------------------
 
 def draw_menu(surface, mouse_pos):
     if not menu_visible:
@@ -145,7 +141,6 @@ def draw_menu(surface, mouse_pos):
     logo_rect = logo_image.get_rect()
     logo_rect.center = (600, 400)  # Adjust the position as necessary
     
-    # Assuming you have your buttons defined somewhere above this function
     buttons = [start_game_button_rect, quit_button_rect]
 
     # Calculate the boundary of the logo and buttons
@@ -264,16 +259,10 @@ def draw_grid(surface):
 
 def draw_buttons(surface):
     def draw_button(rect, text, is_active):
-        # Draw the button rectangle
         pygame.draw.rect(surface, button_color, rect, 0, 5)
-
-        # Render the text to a new Surface
         text_surf = button_font.render(
             text, fgcolor=(255, 255, 255), size=24)[0]
-
-        # Calculate text position for centering
         text_rect = text_surf.get_rect(center=rect.center)
-
         # If the button is active and mouse is hovered, simulate hover effect
         if is_active and rect.collidepoint(pygame.mouse.get_pos()):
             pygame.draw.rect(surface, (0, 180, 0), rect, 0, 5)
