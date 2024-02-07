@@ -158,7 +158,7 @@ default_positions = [
         "Cobalt": (1, 3),
         "Mustard": (2, 1),
     },
-    # round 10, can't dynamically render this round
+    # round 10
     {
         "Mint": (0, 0),
         "Teal": (1, 0),

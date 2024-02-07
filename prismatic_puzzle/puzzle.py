@@ -22,7 +22,7 @@ elapsed_time = 0
 # GUI settings
 title_font = pygame.freetype.SysFont("Arial", 36)
 button_font = pygame.freetype.SysFont("Arial", 24)
-clue_font = pygame.freetype.SysFont("Arial", 20)
+clue_font = pygame.freetype.SysFont("Arial", 24, bold= True)
 button_color = (0, 150, 0)
 #Background Image
 background_images = [
@@ -211,7 +211,7 @@ def draw_validation_overlay(surface, message):
 
         # Draw the validation message box
         message_rect = pygame.Rect(250, 400, 700, 200)
-        pygame.draw.rect(surface, (200, 200, 200), message_rect, border_radius= 2)
+        pygame.draw.rect(surface, (200, 200, 200), message_rect)
 
         if current_round == 10 and message == "Correct! Click 'Next Round' to continue.":
             title_font.render_to(surface, (280, 540), f"Congratulations. You beat the game!", (117, 165, 35))
