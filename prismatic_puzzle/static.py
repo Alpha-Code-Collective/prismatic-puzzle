@@ -56,7 +56,7 @@ CLUES = [
     [
         "Orange, Mint, and Purple are in the same row.",
         "Cobalt is in the same column as Mustard.",
-        "All columns are in alphabetical order from top to bottom.",
+        "All rows are in alphabetical order from left to right.",
         "Orange is not in the same column as Magenta.",
     ],
     # Round 7 clues
@@ -64,7 +64,8 @@ CLUES = [
         "Colors that start with the same letter are in the same column.",
         "Mint sits between Purple and Emerald.",
         "Teal and Coral are as far apart as they can be.",
-        "Teal is in the same column as White, which is in the same row as Magenta, which is in the same column as Mustard, which is in the same row as Coral.",
+        "Teal is in the same column as White, which is in the same row as Magenta,", 
+        "which is in the same column as Mustard, which is in the same row as Coral.",
         "Orange sits next to Emerald.",
     ],
     # Round 8 clues
@@ -92,16 +93,52 @@ CLUES = [
         "Cobalt should be in the top row"
         "Place Orange next to Coral",
     ],
+    #Round 11 clues
+    [
+        "Orange is 2 spaces below Cobalt, which is 2 spaces to the left of Emerald", 
+        "which is above White",
+        "Brown sits to the right of Mint, which is 2 spaces below Teal", 
+        "which is 2 spaces to the right of Grey.",
+        "Mustard sits below Purple, which is 2 spaces to the left of Coral."
+    ],
+    # round 12
+    [
+        "Mustard sits next to 'E', 'C', 'O' and one other color.",
+        "A halloween pair sits on the bottom row.",
+        "Magenta, White and Brown so not share a row or column.",
+        "Teal sits below Cobalt, which is in the same row as Brown"
+    ],
+    # round 13
+    [
+        "Brown knows Orange, Cobalt, and one other.",
+        "Grey and Brown have heard of each other, but don't know each other",
+        "Teal knows Coral, Purple, and one other.",
+        "Teal can see Orange and White but doesn't know them." ,
+        "The only color Teal can both see and know is Purple.",
+        "Cobalt knows White and can see Mustard.",
+        "Coral has never heard of Mint but knows Emerald."
+    ],
+    # round 14
+    [
+        "Emerald only knows colors that are 4 letters long.",
+        "Brown can see Magenta and Purple,",
+        "and has heard of Ornage, but doesn't know any of them.",
+        "Grey only knows Orange, Mint and Mustard, but has heard of White."
+    ],
+    # round 15
+    [
+       "Grey and Mustard hate each other. Magenta and Orange also hate each other"
+       "White knows Mint, Teal, and Emerald and a color that starts with 'C'."
+       "Purple can see Orange but only knows Emerald, Cobalt, and Grey." 
+       "Brown has heard of Purple, knows Mint, and can see Mustard."
+       "Teal doesn't know Purple or Brown, Emerald doens't know Mustard or Brown."
+       "Cobalt doesn't know Magenta or Orange."
+       "Emerald has heard of, but doesn't know Mint."
+    ]
 ]
 default_positions = [
     # Round 1
-    {
-
-        "Coral": (1, 2),
-        "Emerald": (0, 0),
-        "Cobalt": (2, 2)
-    },
-
+    {"Coral": (1, 2), "Emerald": (0, 0), "Cobalt": (2, 2)},
     # round 2
     {
         "Grey": (1, 1),
@@ -138,29 +175,26 @@ default_positions = [
     },
     # round 6
     {
-
         "Coral": (1, 2),
-        "Emerald": (2, 1),
+        "Emerald": (1, 0),
         "Teal": (3, 2),
         "White": (3, 1),
         "Grey": (0, 1),
-
     },
     # round 7
     {
-        "Cobalt": (2, 2),
-        "Mint": (2, 0),
-        "Brown": (1, 1),
+        "Cobalt": (0, 0),
+        "Mint": (2, 1),
+        "Brown": (3, 2),
     },
     # round 8
     {},
     # round 9
     {
-        "Coral": (2, 0),
-        "Cobalt": (1, 3),
-        "Mustard": (2, 1),
+        "Coral": (0, 0),
+        "Cobalt": (0, 2),
+        "Mustard": (3, 1),
     },
-    # round 10
     {
         "Mint": (0, 0),
         "Teal": (1, 0),
@@ -169,12 +203,42 @@ default_positions = [
         "Emerald": (1, 1),
         "Mustard": (3, 1),
         "Magenta": (0, 2),
-        "Grey":(1, 2),
+        "Grey": (1, 2),
         "Purple": (2, 2),
-        "Brown": (3, 2)
+        "Brown": (3, 2),
+    },
+    # round 11
+    {},
+    # round 12
+    {
+        "Coral": (0, 1), 
+        "Mint": (0, 2), 
+        "White": (2, 1)
+    },
+    # round 13
+    {
+        "Teal": (3, 1),
+        "Coral": (3, 0),
+        "Cobalt": (0, 2),
+        "Magenta": (0, 0),
+        "Grey": (1, 0),
+        "Purple": (2, 1),
+        "Brown": (1, 2),
+        "Orange": (1,1)
+    },
+    # round 14
+    {
+        "Emerald": (0, 0),
+        "Purple": (1, 2)
+    }
+    # round 15
+    {
+        "Mustard": (3, 0),
+        "White": (2, 1),
+        "Grey": (0, 2)
     }
 ]
-    
+
 
 # may need to fix 1-4, 0,0 starts at top left not botton left
 rounds_correct_positions = [
@@ -328,4 +392,81 @@ rounds_correct_positions = [
         "White": (0, 0),
         "Grey": (1, 1),
     },
+    # Round 11
+    {
+        "Coral": (2, 1),
+        "Emerald": (3, 0),
+        "Cobalt": (1, 0),
+        "Mustard": (0, 2),
+        "Orange": (1, 2),
+        "Purple": (0, 1),
+        "Magenta": (1, 1),
+        "Brown": (3, 2),
+        "Mint": (2, 2),
+        "Teal": (2, 0),
+        "White": (3, 1),
+        "Grey": (0, 0),
+    },
+    # round 12
+    {
+        "Coral": (0, 1),
+        "Emerald": (1, 0),
+        "Cobalt": (3, 0),
+        "Mustard": (1, 1),
+        "Orange": (1, 2),
+        "Purple": (2, 0),
+        "Magenta": (3, 2),
+        "Brown": (0, 0),
+        "Mint": (0, 2),
+        "Teal": (3, 1),
+        "White": (2, 1),
+        "Grey": (2, 2),
+    },
+    # round 13
+    {
+        "Teal": (3, 1),
+        "Coral": (3, 0),
+        "Cobalt": (0, 2),
+        "Magenta": (0, 0),
+        "Grey": (1, 0),
+        "Purple": (2, 1),
+        "Brown": (1, 2),
+        "Orange": (1, 1),
+        "White": (0, 1),
+        "Mustard": (3, 2),
+        "Mint": (2, 2),
+        "Emerald": (2, 0)   
+    },
+    # round 14
+    {
+        "Emerald": (0, 0),
+        "Purple": (1, 2),
+        "Mint": (1, 0),
+        "Grey": (2, 0),
+        "Orange": (3, 0),
+        "Teal": (0, 1),
+        "Coral": (1, 1),
+        "Mustard": (2, 1),
+        "Cobalt": (3, 1),
+        "Magenta": (0, 2),
+        "Purple": (1, 2),
+        "White": (2, 2),
+        "Brown": (3, 2)
+            
+    },
+    {
+        "Emerald": (2, 2),
+        "Purple": (1, 2),
+        "Mint": (2, 0),
+        "Grey": (0, 2),
+        "Orange": (3, 2),
+        "Teal": (3, 1),
+        "Coral": (0, 1),
+        "Mustard": (3, 0),
+        "Cobalt": (1, 1),
+        "Magenta": (0, 0),
+        "Purple": (1, 2),
+        "White": (2, 1),
+        "Brown": (1, 0)
+    }
 ]
