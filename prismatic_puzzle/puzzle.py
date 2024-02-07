@@ -530,9 +530,10 @@ while True:
                 go_to_previous_level()
 
     screen.fill((0, 0, 0))
-    current_background = background_images[current_round - 1]
-    current_background.set_alpha(100)
-    screen.blit(current_background, (0,0))
+    if 0 <= current_round - 1 < len(background_images):
+        current_background = background_images[current_round - 1]
+        current_background.set_alpha(100)
+        screen.blit(current_background, (0, 0))
    
     draw_grid(screen)
     draw_title(screen)
