@@ -4,7 +4,9 @@ from sys import exit
 import random
 #from static import COLORS, CLUES, rounds_correct_positions, default_positions
 # The .static is for Windows users
-from static import COLORS, CLUES, rounds_correct_positions, default_positions
+from .static import COLORS, CLUES, rounds_correct_positions, default_positions
+import os
+print("current working dir", os.getcwd())
 
 pygame.init()
 screen_width, screen_height = 1200, 1000
@@ -17,6 +19,13 @@ title_font = pygame.freetype.SysFont("Arial", 36)
 button_font = pygame.freetype.SysFont("Arial", 24)
 clue_font = pygame.freetype.SysFont("Arial", 20)
 button_color = (0, 150, 0)
+#Background Image
+background_images = [
+    pygame.image.load('prismatic_puzzle/background1.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/background2.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/background3.jpg').convert_alpha(),
+]
+
 
 
 # Button Settings
@@ -47,7 +56,7 @@ grid_positions = [(x, y) for x in range(grid_cols) for y in range(grid_rows)]
 # Container settings
 container_height = 100  # Adjust height as needed
 container_y = screen.get_height() - container_height  # Position it at the bottom
-container_color = (100, 100, 100)  # A grey color, adjust as needed
+container_color = (172, 176, 174)  # A grey color, adjust as needed
 
 # Overlay menus
 menu_visible = True  # Make the menu visible initially or upon certain conditions
@@ -301,9 +310,14 @@ def calculate_grid_position(center_pos):
 
 def check_cubes_position():
     global positions_correct, message
-    positions_correct = all(cube['grid_pos'] == cube['correct_pos'] for cube in cubes)
-    message = "Correct! Click 'Next Round' to continue." if positions_correct else "Not quite right, try again."
-
+    correct_count = sum(cube['grid_pos'] == cube['correct_pos'] for cube in cubes)
+    total_cubes = len(cubes)
+    if correct_count == total_cubes:
+        positions_correct = True
+        message = f"All correct! Click 'Next Round' to continue."
+    else:
+        positions_correct = False
+        message = f"{correct_count} out of {total_cubes} are correct. Try again."
 def get_clicked_cube(pos):
     for cube in cubes:
         if cube['rect'].collidepoint(pos) and 'movable' in cube and cube['movable']:
@@ -390,9 +404,15 @@ def handle_game_logic(event):
     global start_game, current_round, positions_correct
     if check_button_rect.collidepoint(event.pos) and start_game and not positions_correct:
         check_cubes_position()
+    elif reset_button_rect.collidepoint(event.pos):
+        global cubes, move_history
+        cubes = []
+        move_history = []
+        place_initial_cubes()
     elif next_round_button_rect.collidepoint(event.pos) and positions_correct:
         if current_round < len(rounds_correct_positions) - 1:
             current_round += 1
+            screen.blit(background_image2, (0,0))
             start_game = True
             positions_correct = False
             place_initial_cubes()
@@ -400,8 +420,6 @@ def handle_game_logic(event):
             message = "Game Over! You've completed all rounds!"
 
 place_initial_cubes()
-
-
 
 while True:
     mouse_pos = pygame.mouse.get_pos()  # Get current mouse position
@@ -458,8 +476,12 @@ while True:
                 skip_to_next_level()
             elif event.key == pygame.K_b:  # 'B' key for 'Previous Level'
                 go_to_previous_level()
-    
+
     screen.fill((0, 0, 0))
+    current_background = background_images[current_round - 1]
+    current_background.set_alpha(100)
+    screen.blit(current_background, (0,0))
+   
     draw_grid(screen)
     draw_title(screen)
     draw_container(screen)
