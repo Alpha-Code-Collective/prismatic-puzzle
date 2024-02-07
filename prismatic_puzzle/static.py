@@ -138,11 +138,13 @@ default_positions = [
     },
     # round 6
     {
-        "Coral": (2, 1),
-        "Emerald": (1, 0),
-        "Teal": (3, 1),
-        "White": (3, 0),
-        "Grey": (1, 2),
+
+        "Coral": (1, 2),
+        "Emerald": (2, 1),
+        "Teal": (3, 2),
+        "White": (3, 1),
+        "Grey": (0, 1),
+
     },
     # round 7
     {
