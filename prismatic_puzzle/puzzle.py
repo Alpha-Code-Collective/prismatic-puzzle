@@ -186,9 +186,9 @@ def draw_validation_overlay(surface, message):
         pygame.draw.rect(surface, (200, 200, 200), message_rect)
 
         # Add your validation message and formatting here
-        if message == "All correct! Click 'Next Round' to continue.":
-            title_font.render_to(surface, (280, 460), message, (117, 165, 35))
-            title_font.render_to(surface, (280, 500), f"You solved the round in {str(elapsed_time)} seconds", (117, 165, 35))
+        if current_round == 10:
+            title_font.render_to(surface, (280, 540), f"Congratulations. You beat the game!", (117, 165, 35))
+            title_font.render_to(surface, (280, 540), f"You solved the round in {str(elapsed_time)} seconds", (117, 165, 35))
         else:
             title_font.render_to(surface, (300, 490), message, (0, 0, 0))
 
