@@ -134,7 +134,7 @@ CLUES = [
        "Teal doesn't know Purple or Brown, Emerald doens't know Mustard or Brown.",
        "Cobalt doesn't know Magenta or Orange.",
        "Emerald has heard of, but doesn't know Mint.",
-    ]
+
 ]
 default_positions = [
     # Round 1
