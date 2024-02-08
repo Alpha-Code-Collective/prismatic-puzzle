@@ -14,7 +14,7 @@ else:
     from solution_logic import check_cubes_position
 
 pygame.init()
-screen_width, screen_height = 1350, 1050
+screen_width, screen_height = 1325, 955
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Chroma Cube')
 clock = pygame.time.Clock()
