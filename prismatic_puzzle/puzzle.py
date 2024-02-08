@@ -209,7 +209,7 @@ def draw_menu(surface, mouse_pos):
     menu_rect = pygame.Rect(min_x - padding, min_y - padding, max_x - min_x + 2*padding, max_y - min_y + 2*padding)
     
     # Draw the menu rectangle outline
-    pygame.draw.rect(surface, (200, 200, 200), menu_rect, 3)
+    pygame.draw.rect(surface, (200, 200, 200), menu_rect, 3, 6)
     
     # Draw the logo
     surface.blit(logo_image, logo_rect)
@@ -231,8 +231,10 @@ def draw_rules_overlay(surface):
         surface.blit(overlay, (0, 0))
 
         # Draw the rules box
-        rules_rect = pygame.Rect(300, 200, 600, 600)
-        pygame.draw.rect(surface, (200, 200, 200), rules_rect)
+        rules_rect = pygame.Rect(300, 200, 700, 600)
+        border_rect = rules_rect.inflate(6, 6)
+        pygame.draw.rect(surface, (56, 62, 130), border_rect, 0, 7)
+        pygame.draw.rect(surface, (175, 180, 196), rules_rect, 0, 7)
 
         # Add your rules content and formatting here
         rules_text = [
@@ -260,7 +262,9 @@ def draw_validation_overlay(surface, message):
 
         # Draw the validation message box
         message_rect = pygame.Rect(250, 400, 700, 200)
-        pygame.draw.rect(surface, (200, 200, 200), message_rect)
+        border_rect = message_rect.inflate(6, 6)
+        pygame.draw.rect(surface, (56, 62, 130), border_rect, 0, 7)
+        pygame.draw.rect(surface, (175, 180, 196), message_rect, 0, 7)
 
         if current_round == 14 and message == "Correct! Click 'Next Round' to continue.":
             title_font.render_to(surface, (280, 440), f"Congratulations. You beat the game!", (117, 165, 35))
@@ -281,7 +285,7 @@ def draw_title(screen):
 def draw_container(surface):
     container_rect = pygame.Rect(
         0, container_y, screen.get_width(), container_height)
-    pygame.draw.rect(surface, container_color, container_rect)
+    pygame.draw.rect(surface, container_color, container_rect, -1)
 
 def draw_cubes(surface):
     cubes_to_draw = []
@@ -291,14 +295,14 @@ def draw_cubes(surface):
             cubes_to_draw.append(cube)
 
     for cube in cubes_to_draw:
-        pygame.draw.rect(surface, cube['color'], cube['rect'])
+        pygame.draw.rect(surface, cube['color'], cube['rect'], 0, 7)
         text_surf, text_rect = clue_font.render(cube['color_name'], (0, 0, 0))
         text_rect.center = cube['rect'].center
         surface.blit(text_surf, text_rect)
 
     if selected_cube:
         pygame.draw.rect(
-            surface, selected_cube['color'], selected_cube['rect'])
+            surface, selected_cube['color'], selected_cube['rect'], 0, 7)
         text_surf, text_rect = clue_font.render(
             selected_cube['color_name'], (0, 0, 0))
         text_rect.center = selected_cube['rect'].center
@@ -309,18 +313,18 @@ def draw_grid(surface):
         for col in range(grid_cols):
             rect = pygame.Rect(
                 grid_origin[0] + col * cell_size, grid_origin[1] + row * cell_size, cell_size, cell_size)
-            pygame.draw.rect(surface, (255, 255, 255), rect, 3)
+            pygame.draw.rect(surface, (255, 255, 255), rect, 3, 1)
 
 def draw_buttons(surface):
     def draw_button(rect, text, is_active, border_thickness=1.5, border_color=(242, 195, 39)):
         # Calculate the border rect by inflating the original rect
         border_rect = rect.inflate(border_thickness * 2, border_thickness * 2)
-
+        button_inner_color = (0, 180, 0) if is_active and rect.collidepoint(pygame.mouse.get_pos()) else button_color
         # Draw the border rect first
         pygame.draw.rect(surface, border_color, border_rect, 0, 7)  # Adjust the corner radius if needed
 
         # Then draw the button rect over it
-        pygame.draw.rect(surface, button_color if not is_active else (92, 130, 242), rect, 0, 7)
+        pygame.draw.rect(surface, button_inner_color, rect, 0, 7)
 
         # Render the button text
         text_surf = button_font.render(text, fgcolor=(255, 255, 255), size=24)[0]
