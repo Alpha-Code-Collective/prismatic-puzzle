@@ -17,13 +17,13 @@ CLUES = [
     # Round 1 clues
     [
         "Coral and Magenta are in the same column.",
-        "Teal sits next to Magenta.",
+        "Grey sits next to Magenta.",
         "Either Teal or Grey sits next to Cobalt.",
         "Coral sits next to White.",
     ],
     # Round 2 clues
     [
-        "White isnt isn't in a corner space but Mustard is.",
+        "White isn't in a corner space but Mustard is.",
         "Coral is the farthest distance from Emerald, which sits next to Teal.",
         "Purple is in the same column as Mint, which is in the same row as Orange.",
     ],
@@ -129,12 +129,12 @@ CLUES = [
     [
        "Grey and Mustard hate each other. Magenta and Orange also hate each other",
        "White knows Mint, Teal, and Emerald and a color that starts with 'C'.",
-       "Purple can see Orange but only knows Emerald, Cobalt, and Grey.", 
+       "Purple can see Orange but only knows Emerald, Cobalt, and Grey.",
        "Brown has heard of Purple, knows Mint, and can see Mustard.",
        "Teal doesn't know Purple or Brown, Emerald doens't know Mustard or Brown.",
        "Cobalt doesn't know Magenta or Orange.",
-       "Emerald has heard of, but doesn't know Mint."
-    ]
+       "Emerald has heard of, but doesn't know Mint.",
+
 ]
 default_positions = [
     # Round 1
