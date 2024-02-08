@@ -9,20 +9,3 @@ def check_cubes_position(cubes):
         cube['grid_pos'] == cube['correct_pos'] for cube in cubes)
     message = "Correct! Click 'Next Round' to continue." if positions_correct else "Not quite right, try again."
     return positions_correct, message
-
-
-# def check_cubes_position(cubes):
-#     # First, check if any of the cubes have a grid position set
-#     any_position_set = any(cube['grid_pos'] is not None for cube in cubes)
-
-#     # If no positions are set, we know immediately the setup is not correct
-#     if not any_position_set:
-#         return False, "Not quite right, try again."
-
-#     # If at least one position is set, check if all placed cubes are in their correct positions
-#     positions_correct = all(
-#         cube['grid_pos'] == cube['correct_pos'] for cube in cubes if cube['grid_pos'] is not None
-#     )
-
-#     message = "Correct! Click 'Next Round' to continue." if positions_correct else "Not quite right, try again."
-#     return positions_correct, message
