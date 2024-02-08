@@ -62,7 +62,9 @@ next_round_button_y = 185  # Updated for clarity
 rules_button_y = 25
 # Buttons
 
+
 #---Round Buttons
+
 start_button_rect = pygame.Rect(
     button_x, start_button_y, button_width, 50)  # "Start" button
 check_button_rect = pygame.Rect(
@@ -70,15 +72,19 @@ check_button_rect = pygame.Rect(
 next_round_button_rect = pygame.Rect(
     button_x, next_round_button_y, button_width, 50)  # "Next Round" button
 rules_button_rect = pygame.Rect(button_x, rules_button_y, button_width, 50)
+
+
+
 border_rect = rules_button_rect.inflate(8,8)
 #---Undo Buttons
+
 undo_button_rect = pygame.Rect(button_x + 300, 250, 100, 50)
 reset_button_rect = pygame.Rect(button_x + 300, 350, 100, 50)
-#---Music Buttons
+# ---Music Buttons
 music_button_rect = pygame.Rect(50, 30, 100, 50)
 volume_up_button_rect = pygame.Rect(50, 100, 100, 50)
 volume_down_button_rect = pygame.Rect(50, 170, 100, 50)
-#---Beginning Buttons
+# ---Beginning Buttons
 quit_button_rect = pygame.Rect(500, 600, 200, 50)
 buttons = [start_button_rect, quit_button_rect]  
 # Grid settings

@@ -17,8 +17,8 @@ CLUES = [
     # Round 1 clues
     [
         "Coral and Magenta are in the same column.",
-        "Grey sits next to Magenta.",
-        "Either Teal or Grey sits next to Cobalt.",
+        "Black sits next to Magenta.",
+        "Either Teal or Black sits next to Cobalt.",
         "Coral sits next to White.",
     ],
     # Round 2 clues
@@ -38,15 +38,15 @@ CLUES = [
     # Round 4 clues
     [
         "Emerald, Teal, and Mint are in the same row.",
-        "Grey and White are in the opposite corners.",
+        "Black and White are in the opposite corners.",
         "Teal, Emerald and Brown sit next to Magenta.",
         "White sits next to Mint.",
         "Orange and Purple are in the same row.",
-        "Grey, Emerald & Mustard are in the same column.",
+        "Black, Emerald & Mustard are in the same column.",
     ],
     # Round 5 clues
     [
-        "Colors that start with 'B', 'G' and 'C' are in the top corners.",
+        "Colors that start with 'B', 'G', and 'C' are in the corners.",
         "Colors that start with 'M' are in the same column.",
         "Neither Coral nor Teal sit next to Magenta.",
         "Coral and Brown are in the same row.",
@@ -54,10 +54,10 @@ CLUES = [
     ],
     # Round 6 clues
     [
-        "Orange, Mint, and Purple are in the same row.",
-        "Cobalt is in the same column as Mustard.",
-        "All rows are in alphabetical order from left to right.",
-        "Orange is not in the same column as Magenta.",
+        "Orange, Mint, and Purple are in the same column.",
+        "Cobalt is in the same row as Mustard.",
+        "Each row is in alphabetical order from left to right.",
+        "Orange is not in the same row as Magenta.",
     ],
     # Round 7 clues
     [
@@ -71,7 +71,7 @@ CLUES = [
     # Round 8 clues
     [
         "Teal and Brown are in the middle row and middle two columns.",
-        "All rows are in alphabetical order from left to right.",
+        "Each row is in alphabetical order from left to right.",
         "White is in the same column as Magenta and Purple.",
         "Mustard sits above Brown.",
     ],
@@ -98,7 +98,7 @@ CLUES = [
         "Orange is 2 spaces below Cobalt, which is 2 spaces to the left of Emerald", 
         "which is above White",
         "Brown sits to the right of Mint, which is 2 spaces below Teal", 
-        "which is 2 spaces to the right of Grey.",
+        "which is 2 spaces to the right of Black.",
         "Mustard sits below Purple, which is 2 spaces to the left of Coral."
     ],
     # round 12
@@ -111,7 +111,7 @@ CLUES = [
     # round 13
     [
         "Brown knows Orange, Cobalt, and one other.",
-        "Grey and Brown have heard of each other, but don't know each other",
+        "Black and Brown have heard of each other, but don't know each other",
         "Teal knows Coral, Purple, and one other.",
         "Teal can see Orange and White but doesn't know them." ,
         "The only color Teal can both see and know is Purple.",
@@ -123,13 +123,13 @@ CLUES = [
         "Emerald only knows colors that are 4 letters long.",
         "Brown can see Magenta and Purple,",
         "and has heard of Ornage, but doesn't know any of them.",
-        "Grey only knows Orange, Mint and Mustard, but has heard of White."
+        "Black only knows Orange, Mint and Mustard, but has heard of White."
     ],
     # round 15
     [
-       "Grey and Mustard hate each other. Magenta and Orange also hate each other",
+       "Black and Mustard hate each other. Magenta and Orange also hate each other",
        "White knows Mint, Teal, and Emerald and a color that starts with 'C'.",
-       "Purple can see Orange but only knows Emerald, Cobalt, and Grey.",
+       "Purple can see Orange but only knows Emerald, Cobalt, and Black.",
        "Brown has heard of Purple, knows Mint, and can see Mustard.",
        "Teal doesn't know Purple or Brown, Emerald doens't know Mustard or Brown.",
        "Cobalt doesn't know Magenta or Orange.",
@@ -147,6 +147,7 @@ default_positions = [
         "Orange": (1, 1),
         "Purple": (3, 0),
         "White": (0, 2),
+        "Brown": (2, 1),
     },
     # round 2
     {
