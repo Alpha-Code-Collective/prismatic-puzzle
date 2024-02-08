@@ -35,6 +35,7 @@ pause_text = play_font.render("⏸", True, (255, 255, 255))
 title_font = pygame.freetype.SysFont("Arial", 36)
 button_font = pygame.freetype.SysFont("Arial", 24)
 clue_font = pygame.freetype.SysFont("Arial", 24, bold= True)
+rules_font = pygame.freetype.SysFont("Arial", 20, bold= True)
 button_color = (70, 73, 242)
 
 # Background Image
@@ -261,7 +262,7 @@ def draw_rules_overlay(surface):
 
         y_offset = 350
         for line in rules_text:
-            clue_font.render_to(surface, (350, y_offset), line, (0, 0, 0))
+            rules_font.render_to(surface, (350, y_offset), line, (0, 0, 0))
             y_offset += 30
 
 def draw_validation_overlay(surface, message):
