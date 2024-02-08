@@ -88,9 +88,9 @@ CLUES = [
         "Swap Mint with a color that starts with 'C'.",
         "Shift all blocks down so that open spaces are at the top of the board.",
         "Reverse the order of the middle row.",
-        "Swap the colors in the left-most column."
-        "Shift blocks left so that open spaces are at the right."
-        "Cobalt should be in the top row"
+        "Swap the colors in the left-most column.",
+        "Shift blocks left so that open spaces are at the right.",
+        "Cobalt should be in the top row",
         "Place Orange next to Coral",
     ],
     #Round 11 clues
@@ -127,12 +127,12 @@ CLUES = [
     ],
     # round 15
     [
-       "Grey and Mustard hate each other. Magenta and Orange also hate each other"
-       "White knows Mint, Teal, and Emerald and a color that starts with 'C'."
-       "Purple can see Orange but only knows Emerald, Cobalt, and Grey." 
-       "Brown has heard of Purple, knows Mint, and can see Mustard."
-       "Teal doesn't know Purple or Brown, Emerald doens't know Mustard or Brown."
-       "Cobalt doesn't know Magenta or Orange."
+       "Grey and Mustard hate each other. Magenta and Orange also hate each other",
+       "White knows Mint, Teal, and Emerald and a color that starts with 'C'.",
+       "Purple can see Orange but only knows Emerald, Cobalt, and Grey.", 
+       "Brown has heard of Purple, knows Mint, and can see Mustard.",
+       "Teal doesn't know Purple or Brown, Emerald doens't know Mustard or Brown.",
+       "Cobalt doesn't know Magenta or Orange.",
        "Emerald has heard of, but doesn't know Mint."
     ]
 ]
@@ -230,7 +230,7 @@ default_positions = [
     {
         "Emerald": (0, 0),
         "Purple": (1, 2)
-    }
+    },
     # round 15
     {
         "Mustard": (3, 0),
