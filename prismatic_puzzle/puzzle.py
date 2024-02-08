@@ -6,8 +6,8 @@ from sys import exit
 import os
 
 # The .static is for Windows users
-from .static import COLORS, CLUES, rounds_correct_positions, default_positions
-from .solution_logic import check_cubes_position
+from static import COLORS, CLUES, rounds_correct_positions, default_positions
+from solution_logic import check_cubes_position
 
 pygame.init()
 screen_width, screen_height = 1200, 1000
@@ -542,7 +542,7 @@ while True:
             if start_game_button_rect.collidepoint(event.pos):
                 menu_visible = False  # Hide the menu only if "Start Game" is clicked
                 start_game = True
-            elif quit_button_rect.collidepoint(event.pos):  # Check if the quit button was clicked
+            elif not start_game and quit_button_rect.collidepoint(event.pos):  # Check if the quit button was clicked and game hasn't started
                 pygame.quit()
                 exit()
                 
