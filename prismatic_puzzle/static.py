@@ -137,7 +137,7 @@ CLUES = [
     ]
 
 ]
-]
+
 default_positions = [
     # Round 1
     {
