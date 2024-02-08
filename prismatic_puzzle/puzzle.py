@@ -307,12 +307,12 @@ def draw_cubes(surface):
     for cube in cubes_to_draw:
 
         if cube['color_name'] == "Black":
-            pygame.draw.rect(surface, cube['color'], cube['rect'], 0, 5)
+            pygame.draw.rect(surface, cube['color'], cube['rect'], 0, 7)
             text_surf, text_rect = clue_font.render(cube['color_name'], (255, 255, 255))
             text_rect.center = cube['rect'].center
             surface.blit(text_surf, text_rect)
         else:
-            pygame.draw.rect(surface, cube['color'], cube['rect'], 0, 5)
+            pygame.draw.rect(surface, cube['color'], cube['rect'], 0, 7)
             text_surf, text_rect = clue_font.render(cube['color_name'], (0, 0, 0))
             text_rect.center = cube['rect'].center
             surface.blit(text_surf, text_rect)
@@ -341,7 +341,7 @@ def draw_grid(surface):
         for col in range(grid_cols):
             rect = pygame.Rect(
                 grid_origin[0] + col * cell_size, grid_origin[1] + row * cell_size, cell_size, cell_size)
-            pygame.draw.rect(surface, (255, 255, 255), rect, 3, 1)
+            pygame.draw.rect(surface, (255, 255, 255), rect, 3, 2)
 
 def draw_buttons(surface):
     def draw_button(rect, text, is_active, border_thickness=1.5, border_color=(242, 195, 39)):
