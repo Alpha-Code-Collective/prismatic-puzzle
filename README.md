@@ -8,18 +8,12 @@
 
 ### Setup
 - .venv requirements (where applicable)
-- run pip install -r requirements.txt
+- Run pip install -r requirements.txt
 
 ### How to initialize/run your application (where applicable)
 
-- If on a mac computer, change line 9 and 10 to this:
-    - from static import COLORS, CLUES, rounds_correct_positions, default_positions
-    - from solution_logic import check_cubes_position
-    - run python -m prismatic_puzzle.puzzle
-- If on a windows computer, change line 9 and 10 to this:
-    - from .static import COLORS, CLUES, rounds_correct_positions
-    - from .solution_logic import check_cubes_position  
-    - run python -m prismatic_puzzle.puzzle  
+- Run python -m prismatic_puzzle.puzzle
+
 
 ### Tests
 How do you run tests?

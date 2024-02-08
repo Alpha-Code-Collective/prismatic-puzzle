@@ -2,12 +2,16 @@ import pygame
 import pygame.freetype
 import pygame.mixer
 from pygame.locals import *
-from sys import exit
+import sys
 import os
 
 # The .static is for Windows users
-from .static import COLORS, CLUES, rounds_correct_positions, default_positions
-from .solution_logic import check_cubes_position
+if sys.platform.startswith('win'):
+    from .static import COLORS, CLUES, rounds_correct_positions, default_positions
+    from .solution_logic import check_cubes_position
+else:
+    from static import COLORS, CLUES, rounds_correct_positions, default_positions
+    from solution_logic import check_cubes_position
 
 pygame.init()
 screen_width, screen_height = 1350, 1050
@@ -31,6 +35,7 @@ pause_text = play_font.render("⏸", True, (255, 255, 255))
 title_font = pygame.freetype.SysFont("Arial", 36)
 button_font = pygame.freetype.SysFont("Arial", 24)
 clue_font = pygame.freetype.SysFont("Arial", 24, bold= True)
+rules_font = pygame.freetype.SysFont("Arial", 20, bold= True)
 button_color = (70, 73, 242)
 
 # Background Image
@@ -245,6 +250,8 @@ def draw_rules_overlay(surface):
         rules_box_y = (screen_height - rules_box_height) // 2
 
         rules_rect = pygame.Rect(rules_box_x, rules_box_y, rules_box_width, rules_box_height)
+        # Draw the rules box
+        rules_rect = pygame.Rect(250, 200, 750, 600)
         border_rect = rules_rect.inflate(6, 6)
         pygame.draw.rect(surface, (56, 62, 130), border_rect, 0, 7)
         pygame.draw.rect(surface, (175, 180, 196), rules_rect, 0, 7)
@@ -269,6 +276,8 @@ def draw_rules_overlay(surface):
             surface.blit(text_surface, (text_x, text_start_y))
             text_start_y += 30  # Increment y position for the next line
 
+            rules_font.render_to(surface, (350, y_offset), line, (0, 0, 0))
+            y_offset += 30
 
 def draw_validation_overlay(surface, message):
     global screen_width, screen_height
@@ -305,6 +314,17 @@ def draw_validation_overlay(surface, message):
             solved_surf, solved_rect = title_font.render(solved_message, (117, 165, 35))
             solved_rect.midtop = (screen_width // 2, message_box_y + 90)  # Adjust for spacing
             surface.blit(solved_surf, solved_rect.topleft)  # Use topleft of the rect for positioning
+        if current_round == 14 and message == "Correct! Click 'Next Round' to continue.":
+
+            title_font.render_to(surface, (280, 440), f"Congratulations. You beat the game!", (117, 165, 35))
+
+
+            title_font.render_to(surface, (280, 540), f"You solved the round in {str(elapsed_time)} seconds", (117, 165, 35))
+        elif message == "Correct! Click 'Next Round' to continue.":
+            title_font.render_to(surface, (300, 490), message, (0, 0, 0))
+            title_font.render_to(surface, (280, 540), f"You solved the round in {str(elapsed_time)} seconds", (117, 165, 35))
+        else:
+            title_font.render_to(surface, (300, 490), message, (0, 0, 0))
 
 def draw_title(screen):
     global screen_height, screen_width
