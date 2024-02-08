@@ -6,8 +6,8 @@ from sys import exit
 import os
 
 # The .static is for Windows users
-from static import COLORS, CLUES, rounds_correct_positions, default_positions
-from solution_logic import check_cubes_position
+from .static import COLORS, CLUES, rounds_correct_positions, default_positions
+from .solution_logic import check_cubes_position
 
 pygame.init()
 screen_width, screen_height = 1200, 1000
@@ -31,7 +31,8 @@ pause_text = play_font.render("⏸", True, (255, 255, 255))
 title_font = pygame.freetype.SysFont("Arial", 36)
 button_font = pygame.freetype.SysFont("Arial", 24)
 clue_font = pygame.freetype.SysFont("Arial", 24, bold= True)
-button_color = (0, 150, 0)
+button_color = (70, 73, 242)
+
 # Background Image
 background_images = [
     pygame.image.load('prismatic_puzzle/assets/background1.jpg').convert_alpha(),
@@ -44,6 +45,12 @@ background_images = [
     pygame.image.load('prismatic_puzzle/assets/background8.jpg').convert_alpha(),
     pygame.image.load('prismatic_puzzle/assets/background9.jpg').convert_alpha(),
     pygame.image.load('prismatic_puzzle/assets/background10.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background11.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background12.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background13.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background14.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background15.jpg').convert_alpha(),
+
 ]
 
 # Button Settings
@@ -54,7 +61,10 @@ check_button_y = 125  # Updated for clarity, providing more space between button
 next_round_button_y = 185  # Updated for clarity
 rules_button_y = 25
 # Buttons
-# ---Round Buttons
+
+
+#---Round Buttons
+
 start_button_rect = pygame.Rect(
     button_x, start_button_y, button_width, 50)  # "Start" button
 check_button_rect = pygame.Rect(
@@ -62,7 +72,12 @@ check_button_rect = pygame.Rect(
 next_round_button_rect = pygame.Rect(
     button_x, next_round_button_y, button_width, 50)  # "Next Round" button
 rules_button_rect = pygame.Rect(button_x, rules_button_y, button_width, 50)
-# ---Undo Buttons
+
+
+
+border_rect = rules_button_rect.inflate(8,8)
+#---Undo Buttons
+
 undo_button_rect = pygame.Rect(button_x + 300, 250, 100, 50)
 reset_button_rect = pygame.Rect(button_x + 300, 350, 100, 50)
 # ---Music Buttons
@@ -97,6 +112,7 @@ start_game = False
 positions_correct = False  # Flag to indicate if the cube positions are correct
 current_round = 0
 message = ""
+
 
 # Adjust position and size as needed
 start_game_button_rect = pygame.Rect(500, 500, 200, 50)
@@ -200,7 +216,7 @@ def draw_menu(surface, mouse_pos):
     menu_rect = pygame.Rect(min_x - padding, min_y - padding, max_x - min_x + 2*padding, max_y - min_y + 2*padding)
     
     # Draw the menu rectangle outline
-    pygame.draw.rect(surface, (200, 200, 200), menu_rect, 3)
+    pygame.draw.rect(surface, (200, 200, 200), menu_rect, 3, 6)
     
     # Draw the logo
     surface.blit(logo_image, logo_rect)
@@ -222,8 +238,10 @@ def draw_rules_overlay(surface):
         surface.blit(overlay, (0, 0))
 
         # Draw the rules box
-        rules_rect = pygame.Rect(300, 200, 600, 600)
-        pygame.draw.rect(surface, (200, 200, 200), rules_rect)
+        rules_rect = pygame.Rect(300, 200, 700, 600)
+        border_rect = rules_rect.inflate(6, 6)
+        pygame.draw.rect(surface, (56, 62, 130), border_rect, 0, 7)
+        pygame.draw.rect(surface, (175, 180, 196), rules_rect, 0, 7)
 
         # Add your rules content and formatting here
         rules_text = [
@@ -251,10 +269,15 @@ def draw_validation_overlay(surface, message):
 
         # Draw the validation message box
         message_rect = pygame.Rect(250, 400, 700, 200)
-        pygame.draw.rect(surface, (200, 200, 200), message_rect)
+        border_rect = message_rect.inflate(6, 6)
+        pygame.draw.rect(surface, (56, 62, 130), border_rect, 0, 7)
+        pygame.draw.rect(surface, (175, 180, 196), message_rect, 0, 7)
 
-        if current_round == 15 and message == "Correct! Click 'Next Round' to continue.":
+        if current_round == 14 and message == "Correct! Click 'Next Round' to continue.":
+
             title_font.render_to(surface, (280, 540), f"Congratulations. You beat the game!", (117, 165, 35))
+
+
             title_font.render_to(surface, (280, 540), f"You solved the round in {str(elapsed_time)} seconds", (117, 165, 35))
         elif message == "Correct! Click 'Next Round' to continue.":
             title_font.render_to(surface, (300, 490), message, (0, 0, 0))
@@ -272,7 +295,7 @@ def draw_title(screen):
 def draw_container(surface):
     container_rect = pygame.Rect(
         0, container_y, screen.get_width(), container_height)
-    pygame.draw.rect(surface, container_color, container_rect)
+    pygame.draw.rect(surface, container_color, container_rect, -1)
 
 def draw_cubes(surface):
     cubes_to_draw = []
@@ -282,37 +305,60 @@ def draw_cubes(surface):
             cubes_to_draw.append(cube)
 
     for cube in cubes_to_draw:
-        if cube['color_name']: 
-            pygame.draw.rect(surface, cube['color'], cube['rect'])
-        text_surf, text_rect = clue_font.render(cube["color_name"], (255, 255, 255))
-        text_rect.center = cube['rect'].center
-        surface.blit(text_surf, text_rect)
 
-    if selected_cube:
-        pygame.draw.rect(
-            surface, selected_cube['color'], selected_cube['rect'])
-        text_surf, text_rect = clue_font.render(selected_cube["color_name"], (255, 255, 255))
-        text_rect.center = selected_cube['rect'].center
-        surface.blit(text_surf, text_rect)
+        if cube['color_name'] == "Black":
+            pygame.draw.rect(surface, cube['color'], cube['rect'])
+            text_surf, text_rect = clue_font.render(cube['color_name'], (255, 255, 255))
+            text_rect.center = cube['rect'].center
+            surface.blit(text_surf, text_rect)
+        else:
+            pygame.draw.rect(surface, cube['color'], cube['rect'])
+            text_surf, text_rect = clue_font.render(cube['color_name'], (0, 0, 0))
+            text_rect.center = cube['rect'].center
+            surface.blit(text_surf, text_rect)
+
+    for cube in cubes:
+        if cube is selected_cube:
+            if cube['color_name'] == "Black":
+                pygame.draw.rect(
+                    surface, selected_cube['color'], selected_cube['rect'])
+                text_surf, text_rect = clue_font.render(
+                    selected_cube['color_name'], (255, 255, 255))
+                text_rect.center = selected_cube['rect'].center
+                surface.blit(text_surf, text_rect)
+            else:
+                pygame.draw.rect(
+                    surface, selected_cube['color'], selected_cube['rect'])
+                text_surf, text_rect = clue_font.render(
+                    selected_cube['color_name'], (0, 0, 0))
+                text_rect.center = selected_cube['rect'].center
+                surface.blit(text_surf, text_rect)
+
+
 
 def draw_grid(surface):
     for row in range(grid_rows):
         for col in range(grid_cols):
             rect = pygame.Rect(
                 grid_origin[0] + col * cell_size, grid_origin[1] + row * cell_size, cell_size, cell_size)
-            pygame.draw.rect(surface, (255, 255, 255), rect, 3)
+            pygame.draw.rect(surface, (255, 255, 255), rect, 3, 1)
 
 def draw_buttons(surface):
-    def draw_button(rect, text, is_active):
-        pygame.draw.rect(surface, button_color, rect, 0, 5)
-        text_surf = button_font.render(
-            text, fgcolor=(255, 255, 255), size=24)[0]
-        text_rect = text_surf.get_rect(center=rect.center)
-        # If the button is active and mouse is hovered, simulate hover effect
-        if is_active and rect.collidepoint(pygame.mouse.get_pos()):
-            pygame.draw.rect(surface, (0, 180, 0), rect, 0, 5)
+    def draw_button(rect, text, is_active, border_thickness=1.5, border_color=(242, 195, 39)):
+        # Calculate the border rect by inflating the original rect
+        border_rect = rect.inflate(border_thickness * 2, border_thickness * 2)
+        button_inner_color = (0, 180, 0) if is_active and rect.collidepoint(pygame.mouse.get_pos()) else button_color
+        # Draw the border rect first
+        pygame.draw.rect(surface, border_color, border_rect, 0, 7)  # Adjust the corner radius if needed
 
+        # Then draw the button rect over it
+        pygame.draw.rect(surface, button_inner_color, rect, 0, 7)
+
+        # Render the button text
+        text_surf = button_font.render(text, fgcolor=(255, 255, 255), size=24)[0]
+        text_rect = text_surf.get_rect(center=rect.center)
         surface.blit(text_surf, text_rect)
+
 
     if start_game and not positions_correct:
         draw_button(reset_button_rect, "Reset", True)
@@ -520,9 +566,10 @@ def handle_game_logic(event):
             start_game = True
             positions_correct = False
             play_game()
-        else:
-            message = "Game Over! You've completed all rounds!"
-
+        elif current_round == 14:
+            current_round = 0
+            start_game = True
+            positions_correct = False
 
 play_game()
 while True:
@@ -542,7 +589,7 @@ while True:
             if start_game_button_rect.collidepoint(event.pos):
                 menu_visible = False  # Hide the menu only if "Start Game" is clicked
                 start_game = True
-            elif quit_button_rect.collidepoint(event.pos):  # Check if the quit button was clicked
+            elif not start_game and quit_button_rect.collidepoint(event.pos):  # Check if the quit button was clicked and game hasn't started
                 pygame.quit()
                 exit()
                 
@@ -610,7 +657,7 @@ while True:
 
     screen.fill((0, 0, 0))
     if 0 <= current_round < len(background_images):
-        current_background = background_images[current_round - 1]
+        current_background = background_images[current_round]
         image_width, image_height = current_background.get_size()
         x_position = (screen_width - image_width) // 2
         y_position = (screen_height - image_height) // 2
