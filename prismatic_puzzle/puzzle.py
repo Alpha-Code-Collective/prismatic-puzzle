@@ -253,7 +253,7 @@ def draw_validation_overlay(surface, message):
         message_rect = pygame.Rect(250, 400, 700, 200)
         pygame.draw.rect(surface, (200, 200, 200), message_rect)
 
-        if current_round == 15 and message == "Correct! Click 'Next Round' to continue.":
+        if current_round == 14 and message == "Correct! Click 'Next Round' to continue.":
             title_font.render_to(surface, (280, 540), f"Congratulations. You beat the game!", (117, 165, 35))
             title_font.render_to(surface, (280, 540), f"You solved the round in {str(elapsed_time)} seconds", (117, 165, 35))
         elif message == "Correct! Click 'Next Round' to continue.":
@@ -282,18 +282,35 @@ def draw_cubes(surface):
             cubes_to_draw.append(cube)
 
     for cube in cubes_to_draw:
-        pygame.draw.rect(surface, cube['color'], cube['rect'])
-        text_surf, text_rect = clue_font.render(cube['color_name'], (0, 0, 0))
-        text_rect.center = cube['rect'].center
-        surface.blit(text_surf, text_rect)
+        if cube['color_name'] == "Black":
+            pygame.draw.rect(surface, cube['color'], cube['rect'])
+            text_surf, text_rect = clue_font.render(cube['color_name'], (255, 255, 255))
+            text_rect.center = cube['rect'].center
+            surface.blit(text_surf, text_rect)
+        else:
+            pygame.draw.rect(surface, cube['color'], cube['rect'])
+            text_surf, text_rect = clue_font.render(cube['color_name'], (0, 0, 0))
+            text_rect.center = cube['rect'].center
+            surface.blit(text_surf, text_rect)
 
-    if selected_cube:
-        pygame.draw.rect(
-            surface, selected_cube['color'], selected_cube['rect'])
-        text_surf, text_rect = clue_font.render(
-            selected_cube['color_name'], (0, 0, 0))
-        text_rect.center = selected_cube['rect'].center
-        surface.blit(text_surf, text_rect)
+    for cube in cubes:
+        if cube is selected_cube:
+            if cube['color_name'] == "Black":
+                pygame.draw.rect(
+                    surface, selected_cube['color'], selected_cube['rect'])
+                text_surf, text_rect = clue_font.render(
+                    selected_cube['color_name'], (255, 255, 255))
+                text_rect.center = selected_cube['rect'].center
+                surface.blit(text_surf, text_rect)
+            else:
+                pygame.draw.rect(
+                    surface, selected_cube['color'], selected_cube['rect'])
+                text_surf, text_rect = clue_font.render(
+                    selected_cube['color_name'], (0, 0, 0))
+                text_rect.center = selected_cube['rect'].center
+                surface.blit(text_surf, text_rect)
+
+
 
 def draw_grid(surface):
     for row in range(grid_rows):

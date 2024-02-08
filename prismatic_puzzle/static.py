@@ -10,7 +10,7 @@ COLORS = {
     "Mint": (0, 245, 163),
     "Teal": (0, 128, 128),
     "White": (255, 255, 255),
-    "Grey": (103, 103, 103),
+    "Black": (0, 0, 0),
 }
 
 CLUES = [
@@ -137,7 +137,6 @@ CLUES = [
     ]
 
 ]
-]
 default_positions = [
     # Round 1
     {
@@ -150,7 +149,7 @@ default_positions = [
     },
     # round 2
     {
-        "Grey": (1, 1),
+        "Black": (1, 1),
         "Cobalt": (1, 0),
         "Brown": (2, 1),
         "Orange": (3, 1),
@@ -161,7 +160,7 @@ default_positions = [
     {
         "Emerald": (0, 1),
         "Mint": (1, 2),
-        "Grey": (2, 1),
+        "Black": (2, 1),
         "Purple": (3, 2),
         "Magenta": (1, 0),
         "Coral": (3, 0),
@@ -188,7 +187,7 @@ default_positions = [
         "Emerald": (1, 0),
         "Teal": (3, 2),
         "White": (3, 1),
-        "Grey": (0, 1),
+        "Black": (0, 1),
     },
     # round 7
     {
@@ -212,7 +211,7 @@ default_positions = [
         "Emerald": (1, 1),
         "Mustard": (3, 1),
         "Magenta": (0, 2),
-        "Grey": (1, 2),
+        "Black": (1, 2),
         "Purple": (2, 2),
         "Brown": (3, 2),
     },
@@ -226,7 +225,7 @@ default_positions = [
         "Coral": (3, 0),
         "Cobalt": (0, 2),
         "Magenta": (0, 0),
-        "Grey": (1, 0),
+        "Black": (1, 0),
         "Purple": (2, 1),
         "Brown": (1, 2),
         "Orange": (1, 1),
@@ -234,7 +233,7 @@ default_positions = [
     # round 14
     {"Emerald": (0, 0), "Purple": (1, 2)},
     # round 15
-    {"Mustard": (3, 0), "White": (2, 1), "Grey": (0, 2)},
+    {"Mustard": (3, 0), "White": (2, 1), "Black": (0, 2)},
 ]
 
 
@@ -253,7 +252,7 @@ rounds_correct_positions = [
         "Mint": (0, 1),
         "Teal": (3, 2),
         "White": (0, 2),
-        "Grey": (2, 0),
+        "Black": (2, 0),
     },
     # Round 2
     {
@@ -268,7 +267,7 @@ rounds_correct_positions = [
         "Mint": (0, 1),
         "Teal": (1, 2),
         "White": (2, 2),
-        "Grey": (1, 1),
+        "Black": (1, 1),
     },
     # Round 3
     {
@@ -283,7 +282,7 @@ rounds_correct_positions = [
         "Mint": (1, 2),
         "Teal": (3, 1),
         "White": (0, 0),
-        "Grey": (2, 1),
+        "Black": (2, 1),
     },
     # Round 4
     {
@@ -298,7 +297,7 @@ rounds_correct_positions = [
         "Mint": (0, 1),
         "Teal": (1, 1),
         "White": (0, 0),
-        "Grey": (3, 2),
+        "Black": (3, 2),
     },
     # Round 5
     {
@@ -313,7 +312,7 @@ rounds_correct_positions = [
         "Mint": (1, 2),
         "Teal": (2, 1),
         "White": (3, 1),
-        "Grey": (0, 2),
+        "Black": (0, 2),
     },
     # Round 6
     {
@@ -328,7 +327,7 @@ rounds_correct_positions = [
         "Mint": (2, 0),
         "Teal": (3, 2),
         "White": (3, 1),
-        "Grey": (0, 1),
+        "Black": (0, 1),
     },
     # Round 7
     {
@@ -343,7 +342,7 @@ rounds_correct_positions = [
         "Mint": (2, 1),
         "Teal": (1, 2),
         "White": (1, 0),
-        "Grey": (3, 0),
+        "Black": (3, 0),
     },
     # Round 8
     {
@@ -358,7 +357,7 @@ rounds_correct_positions = [
         "Mint": (0, 0),
         "Teal": (2, 1),
         "White": (3, 1),
-        "Grey": (0, 1),
+        "Black": (0, 1),
     },
     # Round 9
     {
@@ -373,7 +372,7 @@ rounds_correct_positions = [
         "Mint": (1, 0),
         "Teal": (3, 0),
         "White": (1, 1),
-        "Grey": (0, 1),
+        "Black": (0, 1),
     },
     # Round 10
     {
@@ -388,7 +387,7 @@ rounds_correct_positions = [
         "Mint": (1, 1),
         "Teal": (0, 0),
         "White": (2, 0),
-        "Grey": (1, 2),
+        "Black": (1, 2),
     },
     # Round 11
     {
@@ -403,7 +402,7 @@ rounds_correct_positions = [
         "Mint": (2, 2),
         "Teal": (2, 0),
         "White": (3, 1),
-        "Grey": (0, 0),
+        "Black": (0, 0),
     },
     # round 12
     {
@@ -418,7 +417,7 @@ rounds_correct_positions = [
         "Mint": (0, 2),
         "Teal": (3, 1),
         "White": (2, 1),
-        "Grey": (2, 2),
+        "Black": (2, 2),
     },
     # round 13
     {
@@ -426,7 +425,7 @@ rounds_correct_positions = [
         "Coral": (3, 0),
         "Cobalt": (0, 2),
         "Magenta": (0, 0),
-        "Grey": (1, 0),
+        "Black": (1, 0),
         "Purple": (2, 1),
         "Brown": (1, 2),
         "Orange": (1, 1),
@@ -440,7 +439,7 @@ rounds_correct_positions = [
         "Emerald": (0, 0),
         "Purple": (1, 2),
         "Mint": (1, 0),
-        "Grey": (2, 0),
+        "Black": (2, 0),
         "Orange": (3, 0),
         "Teal": (0, 1),
         "Coral": (1, 1),
@@ -456,7 +455,7 @@ rounds_correct_positions = [
         "Emerald": (2, 2),
         "Purple": (1, 2),
         "Mint": (2, 0),
-        "Grey": (0, 2),
+        "Black": (0, 2),
         "Orange": (3, 2),
         "Teal": (3, 1),
         "Coral": (0, 1),
