@@ -275,7 +275,7 @@ def draw_validation_overlay(surface, message):
 
         if current_round == 14 and message == "Correct! Click 'Next Round' to continue.":
 
-            title_font.render_to(surface, (280, 540), f"Congratulations. You beat the game!", (117, 165, 35))
+            title_font.render_to(surface, (280, 440), f"Congratulations. You beat the game!", (117, 165, 35))
 
 
             title_font.render_to(surface, (280, 540), f"You solved the round in {str(elapsed_time)} seconds", (117, 165, 35))
