@@ -24,7 +24,7 @@
 ### Tests
 How do you run tests?
 
-N/A
+Run pytest -k test_puzzle
 
 ### Wire Frame
 
