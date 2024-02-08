@@ -137,7 +137,7 @@ CLUES = [
     ]
 
 ]
-]
+
 default_positions = [
     # Round 1
     {"Coral": (1, 2), "Emerald": (0, 0), "Cobalt": (2, 2)},

@@ -99,7 +99,7 @@ current_round = 0
 message = ""
 
 # Adjust position and size as needed
-start_game_button_rect = pygame.Rect(500, 500, 200, 50)
+start_game_button_rect = pygame.Rect(500, 500 +50, 200, 50)
 
 move_history = []
 
@@ -166,10 +166,48 @@ def decrease_volume():
 
 
 # ----------------------END Play Music-----------------------------------------
+        
+# ----------------------START Animation Class-----------------------------------------
+
+class AnimatedLogo(pygame.sprite.Sprite):
+    def __init__(self, image_paths, position, frame_delay=10):
+        super(AnimatedLogo, self).__init__()
+        self.frames = [pygame.image.load(path) for path in image_paths]
+        self.current_frame = 0
+        self.image = self.frames[self.current_frame]
+        self.rect = self.image.get_rect(center=position)
+        self.frame_delay = frame_delay  # Number of update cycles to wait before switching frames
+        self.animation_counter = 0
+
+    def update(self):
+        # Increment the counter
+        self.animation_counter += 1
+        # Check if the counter has reached the delay threshold
+        if self.animation_counter >= self.frame_delay:
+            self.animation_counter = 0  # Reset the counter
+            # Move to the next frame
+            self.current_frame = (self.current_frame + 1) % len(self.frames)
+            self.image = self.frames[self.current_frame]
+     
+
+# Initialize the animated logo
+image_paths = [
+    'prismatic_puzzle/assets/logo01.png',
+    'prismatic_puzzle/assets/logo02.png',
+    'prismatic_puzzle/assets/logo03.png',
+    'prismatic_puzzle/assets/logo04.png',
+    'prismatic_puzzle/assets/logo05.png',
+    'prismatic_puzzle/assets/logo06.png',
+    'prismatic_puzzle/assets/logo07.png',
+    'prismatic_puzzle/assets/logo08.png'
+]
+animated_logo = AnimatedLogo(image_paths, (600, 400), frame_delay=5)  # Slower animation
+
+# -------------------------------END Animation Class-------------------------------------
 # -------------------------------Draw functions-------------------------------------
 
 
-def draw_menu(surface, mouse_pos):
+def draw_menu(surface, mouse_pos, animated_logo):
     if not menu_visible:
         return
     
@@ -177,33 +215,33 @@ def draw_menu(surface, mouse_pos):
     overlay.fill((0, 0, 0, 180))
     surface.blit(overlay, (0, 0))
     
-    # Load and draw the logo
-    logo_path = os.path.join('prismatic_puzzle/assets', 'logo.png')  # Adjust the path as necessary
-    logo_image = pygame.image.load(logo_path)
-    new_width = 500
-    new_height = 500
-    logo_image = pygame.transform.scale(logo_image, (new_width, new_height))
-    logo_rect = logo_image.get_rect()
-    logo_rect.center = (600, 400)  # Adjust the position as necessary
+    # # Load and draw the logo
+    # logo_path = os.path.join('prismatic_puzzle/assets', 'logo.png')  # Adjust the path as necessary
+    # logo_image = pygame.image.load(logo_path)
+    # new_width = 500
+    # new_height = 500
+    # logo_image = pygame.transform.scale(logo_image, (new_width, new_height))
+    # logo_rect = logo_image.get_rect()
+    # logo_rect.center = (600, 400)  # Adjust the position as necessary
     
     buttons = [start_game_button_rect, quit_button_rect]
 
-    # Calculate the boundary of the logo and buttons
-    min_x = min(logo_rect.left, min(button.left for button in buttons))
-    max_x = max(logo_rect.right, max(button.right for button in buttons))
-    min_y = min(logo_rect.top, min(button.top for button in buttons))
-    max_y = max(logo_rect.bottom, max(button.bottom for button in buttons))
+    # # Calculate the boundary of the logo and buttons
+    # min_x = min(logo_rect.left, min(button.left for button in buttons))
+    # max_x = max(logo_rect.right, max(button.right for button in buttons))
+    # min_y = min(logo_rect.top, min(button.top for button in buttons))
+    # max_y = max(logo_rect.bottom, max(button.bottom for button in buttons))
 
 
-    # Add some padding around the elements
-    padding = 20
-    menu_rect = pygame.Rect(min_x - padding, min_y - padding, max_x - min_x + 2*padding, max_y - min_y + 2*padding)
+    # # Add some padding around the elements
+    # padding = 20
+    # menu_rect = pygame.Rect(min_x - padding, min_y - padding, max_x - min_x + 2*padding, max_y - min_y + 2*padding)
     
-    # Draw the menu rectangle outline
-    pygame.draw.rect(surface, (200, 200, 200), menu_rect, 3)
+    # # Draw the menu rectangle outline
+    # pygame.draw.rect(surface, (200, 200, 200), menu_rect, 3)
     
     # Draw the logo
-    surface.blit(logo_image, logo_rect)
+    surface.blit(animated_logo.image, animated_logo.rect)
   
     # Draw buttons with dynamic background based on mouse hover
     for button_rect, text in [(start_game_button_rect, "Start Game"), (quit_button_rect, "Quit")]:
@@ -527,6 +565,8 @@ def handle_game_logic(event):
 play_game()
 while True:
     mouse_pos = pygame.mouse.get_pos()  # Get current mouse position
+    # Update animated logo every frame
+    animated_logo.update()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -607,15 +647,21 @@ while True:
                 go_to_previous_level()
 
         # -----------TESTING End Level Skip Shortcuts-------
+                
+    draw_menu(screen, pygame.mouse.get_pos(), animated_logo)  # Pass animated_logo to draw_menu
+    pygame.display.flip()  # Update the screen
 
     screen.fill((0, 0, 0))
-    if 0 <= current_round < len(background_images):
-        current_background = background_images[current_round - 1]
-        image_width, image_height = current_background.get_size()
-        x_position = (screen_width - image_width) // 2
-        y_position = (screen_height - image_height) // 2
-        current_background.set_alpha(100)
-        screen.blit(current_background, (x_position, y_position))
+
+    if menu_visible == False:
+        if 0 <= current_round < len(background_images):
+            # Assuming you want to display a specific background based on the current round
+            current_background = background_images[current_round]
+            image_width, image_height = current_background.get_size()
+            x_position = (screen_width - image_width) // 2
+            y_position = (screen_height - image_height) // 2
+            current_background.set_alpha(100)  # Optional: set alpha for transparency effect
+            screen.blit(current_background, (x_position, y_position))
 
 
 
@@ -632,6 +678,6 @@ while True:
         draw_rules_overlay(screen)
     if show_validate:
         draw_validation_overlay(screen, message)
-    draw_menu(screen, mouse_pos)
+    draw_menu(screen, mouse_pos, animated_logo)
     pygame.display.update()
     clock.tick(60)
