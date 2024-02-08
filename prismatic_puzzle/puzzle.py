@@ -238,7 +238,7 @@ def draw_rules_overlay(surface):
         surface.blit(overlay, (0, 0))
 
         # Draw the rules box
-        rules_rect = pygame.Rect(300, 200, 700, 600)
+        rules_rect = pygame.Rect(250, 200, 750, 600)
         border_rect = rules_rect.inflate(6, 6)
         pygame.draw.rect(surface, (56, 62, 130), border_rect, 0, 7)
         pygame.draw.rect(surface, (175, 180, 196), rules_rect, 0, 7)
