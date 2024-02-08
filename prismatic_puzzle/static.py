@@ -10,15 +10,15 @@ COLORS = {
     "Mint": (0, 245, 163),
     "Teal": (0, 128, 128),
     "White": (255, 255, 255),
-    "Grey": (103, 103, 103),
+    "Black": (0, 0, 0),
 }
 
 CLUES = [
     # Round 1 clues
     [
         "Coral and Magenta are in the same column.",
-        "Grey sits next to Magenta.",
-        "Either Teal or Grey sits next to Cobalt.",
+        "Black sits next to Magenta.",
+        "Either Teal or Black sits next to Cobalt.",
         "Coral sits next to White.",
     ],
     # Round 2 clues
@@ -38,15 +38,15 @@ CLUES = [
     # Round 4 clues
     [
         "Emerald, Teal, and Mint are in the same row.",
-        "Grey and White are in the opposite corners.",
+        "Black and White are in the opposite corners.",
         "Teal, Emerald and Brown sit next to Magenta.",
         "White sits next to Mint.",
         "Orange and Purple are in the same row.",
-        "Grey, Emerald & Mustard are in the same column.",
+        "Black, Emerald & Mustard are in the same column.",
     ],
     # Round 5 clues
     [
-        "Colors that start with 'B', 'G' and 'C' are in the top corners.",
+        "Colors that start with 'B', 'G', and 'C' are in the corners.",
         "Colors that start with 'M' are in the same column.",
         "Neither Coral nor Teal sit next to Magenta.",
         "Coral and Brown are in the same row.",
@@ -54,10 +54,10 @@ CLUES = [
     ],
     # Round 6 clues
     [
-        "Orange, Mint, and Purple are in the same row.",
-        "Cobalt is in the same column as Mustard.",
-        "All rows are in alphabetical order from left to right.",
-        "Orange is not in the same column as Magenta.",
+        "Orange, Mint, and Purple are in the same column.",
+        "Cobalt is in the same row as Mustard.",
+        "Each row is in alphabetical order from left to right.",
+        "Orange is not in the same row as Magenta.",
     ],
     # Round 7 clues
     [
@@ -71,7 +71,7 @@ CLUES = [
     # Round 8 clues
     [
         "Teal and Brown are in the middle row and middle two columns.",
-        "All rows are in alphabetical order from left to right.",
+        "Each row is in alphabetical order from left to right.",
         "White is in the same column as Magenta and Purple.",
         "Mustard sits above Brown.",
     ],
@@ -98,7 +98,7 @@ CLUES = [
         "Orange is 2 spaces below Cobalt, which is 2 spaces to the left of Emerald", 
         "which is above White",
         "Brown sits to the right of Mint, which is 2 spaces below Teal", 
-        "which is 2 spaces to the right of Grey.",
+        "which is 2 spaces to the right of Black.",
         "Mustard sits below Purple, which is 2 spaces to the left of Coral."
     ],
     # round 12
@@ -111,7 +111,7 @@ CLUES = [
     # round 13
     [
         "Brown knows Orange, Cobalt, and one other.",
-        "Grey and Brown have heard of each other, but don't know each other",
+        "Black and Brown have heard of each other, but don't know each other",
         "Teal knows Coral, Purple, and one other.",
         "Teal can see Orange and White but doesn't know them." ,
         "The only color Teal can both see and know is Purple.",
@@ -123,13 +123,13 @@ CLUES = [
         "Emerald only knows colors that are 4 letters long.",
         "Brown can see Magenta and Purple,",
         "and has heard of Ornage, but doesn't know any of them.",
-        "Grey only knows Orange, Mint and Mustard, but has heard of White."
+        "Black only knows Orange, Mint and Mustard, but has heard of White."
     ],
     # round 15
     [
-       "Grey and Mustard hate each other. Magenta and Orange also hate each other",
+       "Black and Mustard hate each other. Magenta and Orange also hate each other",
        "White knows Mint, Teal, and Emerald and a color that starts with 'C'.",
-       "Purple can see Orange but only knows Emerald, Cobalt, and Grey.",
+       "Purple can see Orange but only knows Emerald, Cobalt, and Black.",
        "Brown has heard of Purple, knows Mint, and can see Mustard.",
        "Teal doesn't know Purple or Brown, Emerald doens't know Mustard or Brown.",
        "Cobalt doesn't know Magenta or Orange.",
@@ -146,10 +146,11 @@ default_positions = [
         "Orange": (1, 1),
         "Purple": (3, 0),
         "White": (0, 2),
+        "Brown": (2, 1),
     },
     # round 2
     {
-        "Grey": (1, 1),
+        "Black": (1, 1),
         "Cobalt": (1, 0),
         "Brown": (2, 1),
         "Orange": (3, 1),
@@ -160,7 +161,7 @@ default_positions = [
     {
         "Emerald": (0, 1),
         "Mint": (1, 2),
-        "Grey": (2, 1),
+        "Black": (2, 1),
         "Purple": (3, 2),
         "Magenta": (1, 0),
         "Coral": (3, 0),
@@ -187,7 +188,7 @@ default_positions = [
         "Emerald": (1, 0),
         "Teal": (3, 2),
         "White": (3, 1),
-        "Grey": (0, 1),
+        "Black": (0, 1),
     },
     # round 7
     {
@@ -211,7 +212,7 @@ default_positions = [
         "Emerald": (1, 1),
         "Mustard": (3, 1),
         "Magenta": (0, 2),
-        "Grey": (1, 2),
+        "Black": (1, 2),
         "Purple": (2, 2),
         "Brown": (3, 2),
     },
@@ -225,7 +226,7 @@ default_positions = [
         "Coral": (3, 0),
         "Cobalt": (0, 2),
         "Magenta": (0, 0),
-        "Grey": (1, 0),
+        "Black": (1, 0),
         "Purple": (2, 1),
         "Brown": (1, 2),
         "Orange": (1, 1),
@@ -233,7 +234,7 @@ default_positions = [
     # round 14
     {"Emerald": (0, 0), "Purple": (1, 2)},
     # round 15
-    {"Mustard": (3, 0), "White": (2, 1), "Grey": (0, 2)},
+    {"Mustard": (3, 0), "White": (2, 1), "Black": (0, 2)},
 ]
 
 
@@ -252,7 +253,7 @@ rounds_correct_positions = [
         "Mint": (0, 1),
         "Teal": (3, 2),
         "White": (0, 2),
-        "Grey": (2, 0),
+        "Black": (2, 0),
     },
     # Round 2
     {
@@ -267,7 +268,7 @@ rounds_correct_positions = [
         "Mint": (0, 1),
         "Teal": (1, 2),
         "White": (2, 2),
-        "Grey": (1, 1),
+        "Black": (1, 1),
     },
     # Round 3
     {
@@ -282,7 +283,7 @@ rounds_correct_positions = [
         "Mint": (1, 2),
         "Teal": (3, 1),
         "White": (0, 0),
-        "Grey": (2, 1),
+        "Black": (2, 1),
     },
     # Round 4
     {
@@ -297,7 +298,7 @@ rounds_correct_positions = [
         "Mint": (0, 1),
         "Teal": (1, 1),
         "White": (0, 0),
-        "Grey": (3, 2),
+        "Black": (3, 2),
     },
     # Round 5
     {
@@ -312,7 +313,7 @@ rounds_correct_positions = [
         "Mint": (1, 2),
         "Teal": (2, 1),
         "White": (3, 1),
-        "Grey": (0, 2),
+        "Black": (0, 2),
     },
     # Round 6
     {
@@ -327,7 +328,7 @@ rounds_correct_positions = [
         "Mint": (2, 0),
         "Teal": (3, 2),
         "White": (3, 1),
-        "Grey": (0, 1),
+        "Black": (0, 1),
     },
     # Round 7
     {
@@ -342,7 +343,7 @@ rounds_correct_positions = [
         "Mint": (2, 1),
         "Teal": (1, 2),
         "White": (1, 0),
-        "Grey": (3, 0),
+        "Black": (3, 0),
     },
     # Round 8
     {
@@ -357,7 +358,7 @@ rounds_correct_positions = [
         "Mint": (0, 0),
         "Teal": (2, 1),
         "White": (3, 1),
-        "Grey": (0, 1),
+        "Black": (0, 1),
     },
     # Round 9
     {
@@ -372,7 +373,7 @@ rounds_correct_positions = [
         "Mint": (1, 0),
         "Teal": (3, 0),
         "White": (1, 1),
-        "Grey": (0, 1),
+        "Black": (0, 1),
     },
     # Round 10
     {
@@ -387,7 +388,7 @@ rounds_correct_positions = [
         "Mint": (1, 1),
         "Teal": (0, 0),
         "White": (2, 0),
-        "Grey": (1, 2),
+        "Black": (1, 2),
     },
     # Round 11
     {
@@ -402,7 +403,7 @@ rounds_correct_positions = [
         "Mint": (2, 2),
         "Teal": (2, 0),
         "White": (3, 1),
-        "Grey": (0, 0),
+        "Black": (0, 0),
     },
     # round 12
     {
@@ -417,7 +418,7 @@ rounds_correct_positions = [
         "Mint": (0, 2),
         "Teal": (3, 1),
         "White": (2, 1),
-        "Grey": (2, 2),
+        "Black": (2, 2),
     },
     # round 13
     {
@@ -425,7 +426,7 @@ rounds_correct_positions = [
         "Coral": (3, 0),
         "Cobalt": (0, 2),
         "Magenta": (0, 0),
-        "Grey": (1, 0),
+        "Black": (1, 0),
         "Purple": (2, 1),
         "Brown": (1, 2),
         "Orange": (1, 1),
@@ -439,7 +440,7 @@ rounds_correct_positions = [
         "Emerald": (0, 0),
         "Purple": (1, 2),
         "Mint": (1, 0),
-        "Grey": (2, 0),
+        "Black": (2, 0),
         "Orange": (3, 0),
         "Teal": (0, 1),
         "Coral": (1, 1),
@@ -455,7 +456,7 @@ rounds_correct_positions = [
         "Emerald": (2, 2),
         "Purple": (1, 2),
         "Mint": (2, 0),
-        "Grey": (0, 2),
+        "Black": (0, 2),
         "Orange": (3, 2),
         "Teal": (3, 1),
         "Coral": (0, 1),

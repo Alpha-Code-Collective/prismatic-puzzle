@@ -54,7 +54,7 @@ check_button_y = 125  # Updated for clarity, providing more space between button
 next_round_button_y = 185  # Updated for clarity
 rules_button_y = 25
 # Buttons
-#---Round Buttons
+# ---Round Buttons
 start_button_rect = pygame.Rect(
     button_x, start_button_y, button_width, 50)  # "Start" button
 check_button_rect = pygame.Rect(
@@ -62,14 +62,14 @@ check_button_rect = pygame.Rect(
 next_round_button_rect = pygame.Rect(
     button_x, next_round_button_y, button_width, 50)  # "Next Round" button
 rules_button_rect = pygame.Rect(button_x, rules_button_y, button_width, 50)
-#---Undo Buttons
+# ---Undo Buttons
 undo_button_rect = pygame.Rect(button_x + 300, 250, 100, 50)
 reset_button_rect = pygame.Rect(button_x + 300, 350, 100, 50)
-#---Music Buttons
+# ---Music Buttons
 music_button_rect = pygame.Rect(50, 30, 100, 50)
 volume_up_button_rect = pygame.Rect(50, 100, 100, 50)
 volume_down_button_rect = pygame.Rect(50, 170, 100, 50)
-#---Beginning Buttons
+# ---Beginning Buttons
 quit_button_rect = pygame.Rect(500, 600, 200, 50)
 buttons = [start_button_rect, quit_button_rect]  
 # Grid settings
@@ -282,16 +282,16 @@ def draw_cubes(surface):
             cubes_to_draw.append(cube)
 
     for cube in cubes_to_draw:
-        pygame.draw.rect(surface, cube['color'], cube['rect'])
-        text_surf, text_rect = clue_font.render(cube['color_name'], (0, 0, 0))
+        if cube['color_name']: 
+            pygame.draw.rect(surface, cube['color'], cube['rect'])
+        text_surf, text_rect = clue_font.render(cube["color_name"], (255, 255, 255))
         text_rect.center = cube['rect'].center
         surface.blit(text_surf, text_rect)
 
     if selected_cube:
         pygame.draw.rect(
             surface, selected_cube['color'], selected_cube['rect'])
-        text_surf, text_rect = clue_font.render(
-            selected_cube['color_name'], (0, 0, 0))
+        text_surf, text_rect = clue_font.render(selected_cube["color_name"], (255, 255, 255))
         text_rect.center = selected_cube['rect'].center
         surface.blit(text_surf, text_rect)
 
