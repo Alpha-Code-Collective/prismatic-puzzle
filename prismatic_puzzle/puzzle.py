@@ -78,6 +78,7 @@ grid_origin_x = (screen_width - total_grid_width) // 2
 grid_origin_y = 250
 grid_origin = (grid_origin_x, grid_origin_y)
 grid_positions = [(x, y) for x in range(grid_cols) for y in range(grid_rows)]
+start_button_y += 100 
 
 # Container settings
 container_height = 100  # Adjust height as needed
@@ -96,7 +97,7 @@ current_round = 0
 message = ""
 
 # Adjust position and size as needed
-start_game_button_rect = pygame.Rect(500, 500, 200, 50)
+start_game_button_rect = pygame.Rect(500, 500 + 50, 200, 50)
 
 move_history = []
 
@@ -129,7 +130,7 @@ def undo_last_move():
 # ----------------------Play Music-----------------------------------------
 
 # Music file path
-music_file = "prismatic_puzzle/Restless_Bones.mp3"
+music_file = "prismatic_puzzle/assets/Restless_Bones.mp3"
 def play_music(music_file, volume=0.2, loops=-1):
     pygame.mixer.init()
     pygame.mixer.music.load(music_file)
@@ -162,8 +163,34 @@ def draw_music_player_buttons(surface):
     surface.blit(play_text, (play_button.x + 15, play_button.y + 15))
     surface.blit(pause_text, (pause_button.x + 8, pause_button.y + 15))
 
+class AnimatedLogo(pygame.sprite.Sprite):
+    def __init__(self, image_paths, position, animation_speed=.01):
+        super(AnimatedLogo, self).__init__()
+        # Load all images into a list for the animation
+        self.frames = [pygame.image.load(path) for path in image_paths]
+        self.current_frame = 0  # Index of the current image to display
+        self.image = self.frames[self.current_frame]  # Start with the first image
+        self.rect = self.image.get_rect(center=position)
+        self.animation_speed = animation_speed  # Controls speed of frame change
+        self.animation_counter = 0  # Counter to control frame switching speed
 
-def draw_menu(surface, mouse_pos):
+    def update(self):
+        # Increment the counter and update the frame if necessary
+        self.animation_counter += 1
+        if self.animation_counter >= self.animation_speed:
+            self.animation_counter = 0  # Reset the counter
+            self.current_frame = (self.current_frame + 1) % len(self.frames)
+            self.image = self.frames[self.current_frame]  # Update the image
+
+# Initialize the animated logo
+image_paths = [
+    'prismatic_puzzle/assets/logo01.png',
+    'prismatic_puzzle/assets/logo03.png',
+    'prismatic_puzzle/assets/logo02.png'
+]
+animated_logo = AnimatedLogo(image_paths, (600, 400))
+
+def draw_menu(surface, mouse_pos,animated_logo):
     if not menu_visible:
         return
     
@@ -172,33 +199,33 @@ def draw_menu(surface, mouse_pos):
     surface.blit(overlay, (0, 0))
     
     # Load and draw the logo
-    logo_path = os.path.join('prismatic_puzzle/assets', 'logo.png')  # Adjust the path as necessary
-    logo_image = pygame.image.load(logo_path)
-    new_width = 500
-    new_height = 500
-    logo_image = pygame.transform.scale(logo_image, (new_width, new_height))
-    logo_rect = logo_image.get_rect()
-    logo_rect.center = (600, 400)  # Adjust the position as necessary
+    # logo_path = os.path.join('prismatic_puzzle/assets', 'logo.png')  # Adjust the path as necessary
+    # logo_image = pygame.image.load(logo_path)
+    # new_width = 500
+    # new_height = 500
+    # logo_image = pygame.transform.scale(logo_image, (new_width, new_height))
+    # logo_rect = logo_image.get_rect()
+    # logo_rect.center = (600, 400)  # Adjust the position as necessary
     
     # Assuming you have your buttons defined somewhere above this function
     buttons = [start_game_button_rect, quit_button_rect]
 
     # Calculate the boundary of the logo and buttons
-    min_x = min(logo_rect.left, min(button.left for button in buttons))
-    max_x = max(logo_rect.right, max(button.right for button in buttons))
-    min_y = min(logo_rect.top, min(button.top for button in buttons))
-    max_y = max(logo_rect.bottom, max(button.bottom for button in buttons))
+    # min_x = min(logo_rect.left, min(button.left for button in buttons))
+    # max_x = max(logo_rect.right, max(button.right for button in buttons))
+    # min_y = min(logo_rect.top, min(button.top for button in buttons))
+    # max_y = max(logo_rect.bottom, max(button.bottom for button in buttons))
 
 
     # Add some padding around the elements
-    padding = 20
-    menu_rect = pygame.Rect(min_x - padding, min_y - padding, max_x - min_x + 2*padding, max_y - min_y + 2*padding)
+    # padding = 20
+    # menu_rect = pygame.Rect(min_x - padding, min_y - padding, max_x - min_x + 2*padding, max_y - min_y + 2*padding)
     
-    # Draw the menu rectangle outline
-    pygame.draw.rect(surface, (200, 200, 200), menu_rect, 3)
+    # # Draw the menu rectangle outline
+    # pygame.draw.rect(surface, (200, 200, 200), menu_rect, 3)
     
     # Draw the logo
-    surface.blit(logo_image, logo_rect)
+    surface.blit(animated_logo.image, animated_logo.rect)
   
     # Draw buttons with dynamic background based on mouse hover
     for button_rect, text in [(start_game_button_rect, "Start Game"), (quit_button_rect, "Quit")]:
@@ -525,6 +552,8 @@ def handle_game_logic(event):
 play_game()
 while True:
     mouse_pos = pygame.mouse.get_pos()  # Get current mouse position
+    # Update animated logo every frame
+    animated_logo.update()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -534,7 +563,8 @@ while True:
             if undo_button_rect.collidepoint(event.pos):
                 undo_last_move()
                 continue
-
+            if not start_game:
+                animated_logo.update()
 
             if start_game_button_rect.collidepoint(event.pos):
 
@@ -590,6 +620,10 @@ while True:
             if play_button.collidepoint(event.pos) or pause_button.collidepoint(event.pos):
                 toggle_music()
 
+    
+    draw_menu(screen, pygame.mouse.get_pos(), animated_logo)  # Pass animated_logo to draw_menu
+    pygame.display.flip()  # Update the screen
+
     screen.fill((0, 0, 0))
     if 0 <= current_round < len(background_images):
         current_background = background_images[current_round - 1]
@@ -613,7 +647,7 @@ while True:
         draw_rules_overlay(screen)
     if show_validate:
         draw_validation_overlay(screen, message)
-    draw_menu(screen, mouse_pos)
+    draw_menu(screen, mouse_pos, animated_logo)
     draw_music_player_buttons(screen) 
     pygame.display.update()
     clock.tick(60)
