@@ -307,12 +307,12 @@ def draw_cubes(surface):
     for cube in cubes_to_draw:
 
         if cube['color_name'] == "Black":
-            pygame.draw.rect(surface, cube['color'], cube['rect'])
+            pygame.draw.rect(surface, cube['color'], cube['rect'], 0, 5)
             text_surf, text_rect = clue_font.render(cube['color_name'], (255, 255, 255))
             text_rect.center = cube['rect'].center
             surface.blit(text_surf, text_rect)
         else:
-            pygame.draw.rect(surface, cube['color'], cube['rect'])
+            pygame.draw.rect(surface, cube['color'], cube['rect'], 0, 5)
             text_surf, text_rect = clue_font.render(cube['color_name'], (0, 0, 0))
             text_rect.center = cube['rect'].center
             surface.blit(text_surf, text_rect)
