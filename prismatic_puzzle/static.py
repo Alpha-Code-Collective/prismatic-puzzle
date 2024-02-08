@@ -17,13 +17,13 @@ CLUES = [
     # Round 1 clues
     [
         "Coral and Magenta are in the same column.",
-        "Teal sits next to Magenta.",
+        "Grey sits next to Magenta.",
         "Either Teal or Grey sits next to Cobalt.",
         "Coral sits next to White.",
     ],
     # Round 2 clues
     [
-        "White isnt isn't in a corner space but Mustard is.",
+        "White isn't in a corner space but Mustard is.",
         "Coral is the farthest distance from Emerald, which sits next to Teal.",
         "Purple is in the same column as Mint, which is in the same row as Orange.",
     ],
@@ -88,9 +88,9 @@ CLUES = [
         "Swap Mint with a color that starts with 'C'.",
         "Shift all blocks down so that open spaces are at the top of the board.",
         "Reverse the order of the middle row.",
-        "Swap the colors in the left-most column."
-        "Shift blocks left so that open spaces are at the right."
-        "Cobalt should be in the top row"
+        "Swap the colors in the left-most column.",
+        "Shift blocks left so that open spaces are at the right.",
+        "Cobalt should be in the top row",
         "Place Orange next to Coral",
     ],
     #Round 11 clues
@@ -127,13 +127,13 @@ CLUES = [
     ],
     # round 15
     [
-       "Grey and Mustard hate each other. Magenta and Orange also hate each other"
-       "White knows Mint, Teal, and Emerald and a color that starts with 'C'."
-       "Purple can see Orange but only knows Emerald, Cobalt, and Grey." 
-       "Brown has heard of Purple, knows Mint, and can see Mustard."
-       "Teal doesn't know Purple or Brown, Emerald doens't know Mustard or Brown."
-       "Cobalt doesn't know Magenta or Orange."
-       "Emerald has heard of, but doesn't know Mint."
+       "Grey and Mustard hate each other. Magenta and Orange also hate each other",
+       "White knows Mint, Teal, and Emerald and a color that starts with 'C'.",
+       "Purple can see Orange but only knows Emerald, Cobalt, and Grey.",
+       "Brown has heard of Purple, knows Mint, and can see Mustard.",
+       "Teal doesn't know Purple or Brown, Emerald doens't know Mustard or Brown.",
+       "Cobalt doesn't know Magenta or Orange.",
+       "Emerald has heard of, but doesn't know Mint.",
     ]
 ]
 default_positions = [
@@ -230,7 +230,7 @@ default_positions = [
     {
         "Emerald": (0, 0),
         "Purple": (1, 2)
-    }
+    },
     # round 15
     {
         "Mustard": (3, 0),
