@@ -2,15 +2,19 @@ import pygame
 import pygame.freetype
 import pygame.mixer
 from pygame.locals import *
-from sys import exit
+import sys
 import os
 
 # The .static is for Windows users
-from static import COLORS, CLUES, rounds_correct_positions, default_positions
-from solution_logic import check_cubes_position
+if sys.platform.startswith('win'):
+    from .static import COLORS, CLUES, rounds_correct_positions, default_positions
+    from .solution_logic import check_cubes_position
+else:
+    from static import COLORS, CLUES, rounds_correct_positions, default_positions
+    from solution_logic import check_cubes_position
 
 pygame.init()
-screen_width, screen_height = 1200, 1000
+screen_width, screen_height = 1350, 1050
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Chroma Cube')
 clock = pygame.time.Clock()
@@ -31,7 +35,9 @@ pause_text = play_font.render("⏸", True, (255, 255, 255))
 title_font = pygame.freetype.SysFont("Arial", 36)
 button_font = pygame.freetype.SysFont("Arial", 24)
 clue_font = pygame.freetype.SysFont("Arial", 24, bold= True)
-button_color = (0, 150, 0)
+rules_font = pygame.freetype.SysFont("Arial", 20, bold= True)
+button_color = (70, 73, 242)
+
 # Background Image
 background_images = [
     pygame.image.load('prismatic_puzzle/assets/background1.jpg').convert_alpha(),
@@ -44,6 +50,12 @@ background_images = [
     pygame.image.load('prismatic_puzzle/assets/background8.jpg').convert_alpha(),
     pygame.image.load('prismatic_puzzle/assets/background9.jpg').convert_alpha(),
     pygame.image.load('prismatic_puzzle/assets/background10.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background11.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background12.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background13.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background14.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background15.jpg').convert_alpha(),
+
 ]
 
 # Button Settings
@@ -54,7 +66,10 @@ check_button_y = 125  # Updated for clarity, providing more space between button
 next_round_button_y = 185  # Updated for clarity
 rules_button_y = 25
 # Buttons
+
+
 #---Round Buttons
+
 start_button_rect = pygame.Rect(
     button_x, start_button_y, button_width, 50)  # "Start" button
 check_button_rect = pygame.Rect(
@@ -62,14 +77,19 @@ check_button_rect = pygame.Rect(
 next_round_button_rect = pygame.Rect(
     button_x, next_round_button_y, button_width, 50)  # "Next Round" button
 rules_button_rect = pygame.Rect(button_x, rules_button_y, button_width, 50)
+
+
+
+border_rect = rules_button_rect.inflate(8,8)
 #---Undo Buttons
+
 undo_button_rect = pygame.Rect(button_x + 300, 250, 100, 50)
 reset_button_rect = pygame.Rect(button_x + 300, 350, 100, 50)
-#---Music Buttons
+# ---Music Buttons
 music_button_rect = pygame.Rect(50, 30, 100, 50)
 volume_up_button_rect = pygame.Rect(50, 100, 100, 50)
 volume_down_button_rect = pygame.Rect(50, 170, 100, 50)
-#---Beginning Buttons
+# ---Beginning Buttons
 quit_button_rect = pygame.Rect(500, 600, 200, 50)
 buttons = [start_button_rect, quit_button_rect]  
 # Grid settings
@@ -97,6 +117,7 @@ start_game = False
 positions_correct = False  # Flag to indicate if the cube positions are correct
 current_round = 0
 message = ""
+
 
 # Adjust position and size as needed
 start_game_button_rect = pygame.Rect(500, 500, 200, 50)
@@ -170,62 +191,70 @@ def decrease_volume():
 
 
 def draw_menu(surface, mouse_pos):
+    global screen_width, screen_height
+
     if not menu_visible:
         return
-    
-    overlay = pygame.Surface((1200, 1000), pygame.SRCALPHA)
-    overlay.fill((0, 0, 0, 180))
-    surface.blit(overlay, (0, 0))
-    
-    # Load and draw the logo
-    logo_path = os.path.join('prismatic_puzzle/assets', 'logo.png')  # Adjust the path as necessary
-    logo_image = pygame.image.load(logo_path)
-    new_width = 500
-    new_height = 500
+
+    # Load and scale the logo
+    logo_path = os.path.join('prismatic_puzzle/assets', 'logo.png')
+    logo_image = pygame.image.load(logo_path).convert_alpha()
+    new_width, new_height = 600, 600  # Adjust as necessary
     logo_image = pygame.transform.scale(logo_image, (new_width, new_height))
     logo_rect = logo_image.get_rect()
-    logo_rect.center = (600, 400)  # Adjust the position as necessary
-    
-    buttons = [start_game_button_rect, quit_button_rect]
 
-    # Calculate the boundary of the logo and buttons
-    min_x = min(logo_rect.left, min(button.left for button in buttons))
-    max_x = max(logo_rect.right, max(button.right for button in buttons))
-    min_y = min(logo_rect.top, min(button.top for button in buttons))
-    max_y = max(logo_rect.bottom, max(button.bottom for button in buttons))
+    # Calculate the total height of the menu's content (logo + buttons + spacing)
+    button_spacing = 20  # Space between buttons and logo
+    total_content_height = new_height + button_spacing + sum(button.height for button in buttons) + (len(buttons) - 1) * button_spacing
 
+    # Determine the starting Y position for the menu content to center it vertically
+    content_start_y = (screen_height - total_content_height) // 2
 
-    # Add some padding around the elements
-    padding = 20
-    menu_rect = pygame.Rect(min_x - padding, min_y - padding, max_x - min_x + 2*padding, max_y - min_y + 2*padding)
-    
-    # Draw the menu rectangle outline
-    pygame.draw.rect(surface, (200, 200, 200), menu_rect, 3)
-    
+    # Position the logo at the start of the content area
+    logo_rect.center = (screen_width // 2, content_start_y + new_height // 2)
+    content_start_y += new_height + button_spacing  # Update the starting Y for the buttons
+
+    # Overlay for dimming the background
+    overlay = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
+    overlay.fill((0, 0, 0, 180))
+    surface.blit(overlay, (0, 0))
+
     # Draw the logo
     surface.blit(logo_image, logo_rect)
-  
-    # Draw buttons with dynamic background based on mouse hover
+
+    # Draw buttons centered and below the logo
     for button_rect, text in [(start_game_button_rect, "Start Game"), (quit_button_rect, "Quit")]:
+        button_rect.centerx = screen_width // 2
+        button_rect.y = content_start_y
         color = (0, 255, 0) if button_rect.collidepoint(mouse_pos) else (255, 255, 255)
-        pygame.draw.rect(surface, color, button_rect)  # Fill background on hover
+        pygame.draw.rect(surface, color, button_rect)
         text_surf, text_rect = button_font.render(text, (0, 0, 0))
         text_rect.center = button_rect.center
         surface.blit(text_surf, text_rect)
+        content_start_y += button_rect.height + button_spacing
+
 
 
 def draw_rules_overlay(surface):
+    global screen_width, screen_height  # Use global screen dimensions
     if show_rules:
         # Draw a semi-transparent background
-        overlay = pygame.Surface((1200, 1000), pygame.SRCALPHA)
+        overlay = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 180))
         surface.blit(overlay, (0, 0))
 
-        # Draw the rules box
-        rules_rect = pygame.Rect(300, 200, 600, 600)
-        pygame.draw.rect(surface, (200, 200, 200), rules_rect)
+        # Calculate rules box position and size to center it
+        rules_box_width = 700
+        rules_box_height = 600
+        rules_box_x = (screen_width - rules_box_width) // 2
+        rules_box_y = (screen_height - rules_box_height) // 2
 
-        # Add your rules content and formatting here
+        rules_rect = pygame.Rect(rules_box_x, rules_box_y, rules_box_width, rules_box_height)
+        border_rect = rules_rect.inflate(6, 6)
+        pygame.draw.rect(surface, (56, 62, 130), border_rect, 0, 7)
+        pygame.draw.rect(surface, (175, 180, 196), rules_rect, 0, 7)
+
+        # Rules content
         rules_text = [
             "Rules:",
             "- Arrange cubes on the grid to match the correct positions.",
@@ -234,45 +263,67 @@ def draw_rules_overlay(surface):
             "- Click 'Submit' to check your solution.",
             "- Click 'Next Round' to proceed to the next challenge.",
             "- Complete all rounds to win the game.",
-            # Add more rules or instructions here
         ]
 
-        y_offset = 350
+        # Start rendering rules text a bit below the top of the rules box
+        text_start_y = rules_box_y + 150
         for line in rules_text:
-            clue_font.render_to(surface, (350, y_offset), line, (0, 0, 0))
-            y_offset += 30
+            # Render each line of text and center it within the rules box
+            text_surface, text_rect = clue_font.render(line, (0, 0, 0))
+            text_x = rules_box_x + (rules_box_width - text_rect.width) // 2
+            surface.blit(text_surface, (text_x, text_start_y))
+            text_start_y += 30  # Increment y position for the next line
+
 
 def draw_validation_overlay(surface, message):
+    global screen_width, screen_height
     if show_validate:
         # Draw a semi-transparent background
-        overlay = pygame.Surface((1200, 1000), pygame.SRCALPHA)
+        overlay = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 180))
         surface.blit(overlay, (0, 0))
 
-        # Draw the validation message box
-        message_rect = pygame.Rect(250, 400, 700, 200)
-        pygame.draw.rect(surface, (200, 200, 200), message_rect)
+        # Dimensions for the validation message box
+        message_box_width = 700
+        message_box_height = 200
 
-        if current_round == 15 and message == "Correct! Click 'Next Round' to continue.":
-            title_font.render_to(surface, (280, 540), f"Congratulations. You beat the game!", (117, 165, 35))
-            title_font.render_to(surface, (280, 540), f"You solved the round in {str(elapsed_time)} seconds", (117, 165, 35))
-        elif message == "Correct! Click 'Next Round' to continue.":
-            title_font.render_to(surface, (300, 490), message, (0, 0, 0))
-            title_font.render_to(surface, (280, 540), f"You solved the round in {str(elapsed_time)} seconds", (117, 165, 35))
-        else:
-            title_font.render_to(surface, (300, 490), message, (0, 0, 0))
+        # Calculate positions to center the message box on the screen
+        message_box_x = (screen_width - message_box_width) // 2
+        message_box_y = (screen_height - message_box_height) // 2
+
+        message_rect = pygame.Rect(message_box_x, message_box_y, message_box_width, message_box_height)
+        border_rect = message_rect.inflate(6, 6)  # Add some padding for the border
+
+        pygame.draw.rect(surface, (56, 62, 130), border_rect, 0, 7)  # Border
+        pygame.draw.rect(surface, (175, 180, 196), message_rect, 0, 7)  # Message box
+
+        # Render the message
+        congrats_message = "Congratulations. You beat the game!" if current_round == 14 and message == "Correct! Click 'Next Round' to continue." else message
+        solved_message = f"You solved the round in {str(elapsed_time)} seconds" if message == "Correct! Click 'Next Round' to continue." else None
+
+        # Calculate the position of the text for centering
+        congrats_surf, congrats_rect = title_font.render(congrats_message, (117, 165, 35))
+        congrats_rect.midtop = (screen_width // 2, message_box_y + 40)  # Adjust the Y offset as needed
+        surface.blit(congrats_surf, congrats_rect.topleft)  # Use topleft of the rect for positioning
+
+        if solved_message:
+            solved_surf, solved_rect = title_font.render(solved_message, (117, 165, 35))
+            solved_rect.midtop = (screen_width // 2, message_box_y + 90)  # Adjust for spacing
+            surface.blit(solved_surf, solved_rect.topleft)  # Use topleft of the rect for positioning
+
 
 def draw_title(screen):
+    global screen_height, screen_width
     # Round title
     title_surf, title_rect = title_font.render(
         f"Round {current_round + 1}", (0, 255, 0))
-    title_rect.center = (600, 210)  # Adjust as needed
+    title_rect.center = (screen_width // 2, 210)  # Adjust as needed
     screen.blit(title_surf, title_rect)
 
 def draw_container(surface):
     container_rect = pygame.Rect(
         0, container_y, screen.get_width(), container_height)
-    pygame.draw.rect(surface, container_color, container_rect)
+    pygame.draw.rect(surface, container_color, container_rect, -1)
 
 def draw_cubes(surface):
     cubes_to_draw = []
@@ -282,37 +333,60 @@ def draw_cubes(surface):
             cubes_to_draw.append(cube)
 
     for cube in cubes_to_draw:
-        pygame.draw.rect(surface, cube['color'], cube['rect'])
-        text_surf, text_rect = clue_font.render(cube['color_name'], (0, 0, 0))
-        text_rect.center = cube['rect'].center
-        surface.blit(text_surf, text_rect)
 
-    if selected_cube:
-        pygame.draw.rect(
-            surface, selected_cube['color'], selected_cube['rect'])
-        text_surf, text_rect = clue_font.render(
-            selected_cube['color_name'], (0, 0, 0))
-        text_rect.center = selected_cube['rect'].center
-        surface.blit(text_surf, text_rect)
+        if cube['color_name'] == "Black":
+            pygame.draw.rect(surface, cube['color'], cube['rect'], 0, 7)
+            text_surf, text_rect = clue_font.render(cube['color_name'], (255, 255, 255))
+            text_rect.center = cube['rect'].center
+            surface.blit(text_surf, text_rect)
+        else:
+            pygame.draw.rect(surface, cube['color'], cube['rect'], 0, 7)
+            text_surf, text_rect = clue_font.render(cube['color_name'], (0, 0, 0))
+            text_rect.center = cube['rect'].center
+            surface.blit(text_surf, text_rect)
+
+    for cube in cubes:
+        if cube is selected_cube:
+            if cube['color_name'] == "Black":
+                pygame.draw.rect(
+                    surface, selected_cube['color'], selected_cube['rect'])
+                text_surf, text_rect = clue_font.render(
+                    selected_cube['color_name'], (255, 255, 255))
+                text_rect.center = selected_cube['rect'].center
+                surface.blit(text_surf, text_rect)
+            else:
+                pygame.draw.rect(
+                    surface, selected_cube['color'], selected_cube['rect'])
+                text_surf, text_rect = clue_font.render(
+                    selected_cube['color_name'], (0, 0, 0))
+                text_rect.center = selected_cube['rect'].center
+                surface.blit(text_surf, text_rect)
+
+
 
 def draw_grid(surface):
     for row in range(grid_rows):
         for col in range(grid_cols):
             rect = pygame.Rect(
                 grid_origin[0] + col * cell_size, grid_origin[1] + row * cell_size, cell_size, cell_size)
-            pygame.draw.rect(surface, (255, 255, 255), rect, 3)
+            pygame.draw.rect(surface, (255, 255, 255), rect, 3, 2)
 
 def draw_buttons(surface):
-    def draw_button(rect, text, is_active):
-        pygame.draw.rect(surface, button_color, rect, 0, 5)
-        text_surf = button_font.render(
-            text, fgcolor=(255, 255, 255), size=24)[0]
-        text_rect = text_surf.get_rect(center=rect.center)
-        # If the button is active and mouse is hovered, simulate hover effect
-        if is_active and rect.collidepoint(pygame.mouse.get_pos()):
-            pygame.draw.rect(surface, (0, 180, 0), rect, 0, 5)
+    def draw_button(rect, text, is_active, border_thickness=1.5, border_color=(242, 195, 39)):
+        # Calculate the border rect by inflating the original rect
+        border_rect = rect.inflate(border_thickness * 2, border_thickness * 2)
+        button_inner_color = (0, 180, 0) if is_active and rect.collidepoint(pygame.mouse.get_pos()) else button_color
+        # Draw the border rect first
+        pygame.draw.rect(surface, border_color, border_rect, 0, 7)  # Adjust the corner radius if needed
 
+        # Then draw the button rect over it
+        pygame.draw.rect(surface, button_inner_color, rect, 0, 7)
+
+        # Render the button text
+        text_surf = button_font.render(text, fgcolor=(255, 255, 255), size=24)[0]
+        text_rect = text_surf.get_rect(center=rect.center)
         surface.blit(text_surf, text_rect)
+
 
     if start_game and not positions_correct:
         draw_button(reset_button_rect, "Reset", True)
@@ -330,7 +404,8 @@ def draw_buttons(surface):
 
 
 def draw_clues(surface, clues):
-    screen_width = 1200  # Assuming this is your screen width
+    global screen_width, screen_height
+    
     y_offset = 600  # Starting Y position for clues
 
     for clue in clues[current_round]:
@@ -520,9 +595,10 @@ def handle_game_logic(event):
             start_game = True
             positions_correct = False
             play_game()
-        else:
-            message = "Game Over! You've completed all rounds!"
-
+        elif current_round == 14:
+            current_round = 0
+            start_game = True
+            positions_correct = False
 
 play_game()
 while True:
@@ -542,7 +618,7 @@ while True:
             if start_game_button_rect.collidepoint(event.pos):
                 menu_visible = False  # Hide the menu only if "Start Game" is clicked
                 start_game = True
-            elif quit_button_rect.collidepoint(event.pos):  # Check if the quit button was clicked
+            elif not start_game and quit_button_rect.collidepoint(event.pos):  # Check if the quit button was clicked and game hasn't started
                 pygame.quit()
                 exit()
                 
@@ -610,7 +686,7 @@ while True:
 
     screen.fill((0, 0, 0))
     if 0 <= current_round < len(background_images):
-        current_background = background_images[current_round - 1]
+        current_background = background_images[current_round]
         image_width, image_height = current_background.get_size()
         x_position = (screen_width - image_width) // 2
         y_position = (screen_height - image_height) // 2
