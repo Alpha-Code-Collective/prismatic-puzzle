@@ -376,7 +376,7 @@ def play_game():
     off_grid_start_y = container_y + (container_height - cell_size) // 2
 
     placed_colors = starting_positions.keys()
-    x_offset = 50
+    x_offset = 0
     for color_name, correct_pos in rounds_correct_positions[current_round].items():
         if color_name not in placed_colors:
             color_rgb = COLORS[color_name]
@@ -615,7 +615,7 @@ while True:
         x_position = (screen_width - image_width) // 2
         y_position = (screen_height - image_height) // 2
         current_background.set_alpha(100)
-        screen.blit(current_background, (0, 0))
+        screen.blit(current_background, (x_position, y_position))
 
 
 
