@@ -37,6 +37,3 @@ class TestGameLogic(unittest.TestCase):
         self.assertEqual(message, "Not quite right, try again.")
         self.assertFalse(positions_correct)
 
-
-if __name__ == '__main__':
-    unittest.main()
