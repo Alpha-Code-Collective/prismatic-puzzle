@@ -242,7 +242,7 @@ def draw_rules_overlay(surface):
         surface.blit(overlay, (0, 0))
 
         # Draw the rules box
-        rules_rect = pygame.Rect(300, 200, 700, 600)
+        rules_rect = pygame.Rect(250, 200, 750, 600)
         border_rect = rules_rect.inflate(6, 6)
         pygame.draw.rect(surface, (56, 62, 130), border_rect, 0, 7)
         pygame.draw.rect(surface, (175, 180, 196), rules_rect, 0, 7)
@@ -279,7 +279,7 @@ def draw_validation_overlay(surface, message):
 
         if current_round == 14 and message == "Correct! Click 'Next Round' to continue.":
 
-            title_font.render_to(surface, (280, 540), f"Congratulations. You beat the game!", (117, 165, 35))
+            title_font.render_to(surface, (280, 440), f"Congratulations. You beat the game!", (117, 165, 35))
 
 
             title_font.render_to(surface, (280, 540), f"You solved the round in {str(elapsed_time)} seconds", (117, 165, 35))
