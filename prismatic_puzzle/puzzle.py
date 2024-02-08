@@ -6,8 +6,8 @@ from sys import exit
 import os
 
 # The .static is for Windows users
-from static import COLORS, CLUES, rounds_correct_positions, default_positions
-from solution_logic import check_cubes_position
+from .static import COLORS, CLUES, rounds_correct_positions, default_positions
+from .solution_logic import check_cubes_position
 
 pygame.init()
 screen_width, screen_height = 1200, 1000
@@ -44,6 +44,12 @@ background_images = [
     pygame.image.load('prismatic_puzzle/assets/background8.jpg').convert_alpha(),
     pygame.image.load('prismatic_puzzle/assets/background9.jpg').convert_alpha(),
     pygame.image.load('prismatic_puzzle/assets/background10.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background11.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background12.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background13.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background14.jpg').convert_alpha(),
+    pygame.image.load('prismatic_puzzle/assets/background15.jpg').convert_alpha(),
+
 ]
 
 # Button Settings
@@ -253,8 +259,8 @@ def draw_validation_overlay(surface, message):
         message_rect = pygame.Rect(250, 400, 700, 200)
         pygame.draw.rect(surface, (200, 200, 200), message_rect)
 
-        if current_round == 15 and message == "Correct! Click 'Next Round' to continue.":
-            title_font.render_to(surface, (280, 540), f"Congratulations. You beat the game!", (117, 165, 35))
+        if current_round == 14 and message == "Correct! Click 'Next Round' to continue.":
+            title_font.render_to(surface, (280, 440), f"Congratulations. You beat the game!", (117, 165, 35))
             title_font.render_to(surface, (280, 540), f"You solved the round in {str(elapsed_time)} seconds", (117, 165, 35))
         elif message == "Correct! Click 'Next Round' to continue.":
             title_font.render_to(surface, (300, 490), message, (0, 0, 0))
@@ -303,16 +309,21 @@ def draw_grid(surface):
             pygame.draw.rect(surface, (255, 255, 255), rect, 3)
 
 def draw_buttons(surface):
-    def draw_button(rect, text, is_active):
-        pygame.draw.rect(surface, button_color, rect, 0, 5)
-        text_surf = button_font.render(
-            text, fgcolor=(255, 255, 255), size=24)[0]
-        text_rect = text_surf.get_rect(center=rect.center)
-        # If the button is active and mouse is hovered, simulate hover effect
-        if is_active and rect.collidepoint(pygame.mouse.get_pos()):
-            pygame.draw.rect(surface, (0, 180, 0), rect, 0, 5)
+    def draw_button(rect, text, is_active, border_thickness=1.5, border_color=(242, 195, 39)):
+        # Calculate the border rect by inflating the original rect
+        border_rect = rect.inflate(border_thickness * 2, border_thickness * 2)
 
+        # Draw the border rect first
+        pygame.draw.rect(surface, border_color, border_rect, 0, 7)  # Adjust the corner radius if needed
+
+        # Then draw the button rect over it
+        pygame.draw.rect(surface, button_color if not is_active else (92, 130, 242), rect, 0, 7)
+
+        # Render the button text
+        text_surf = button_font.render(text, fgcolor=(255, 255, 255), size=24)[0]
+        text_rect = text_surf.get_rect(center=rect.center)
         surface.blit(text_surf, text_rect)
+
 
     if start_game and not positions_correct:
         draw_button(reset_button_rect, "Reset", True)
@@ -520,9 +531,6 @@ def handle_game_logic(event):
             start_game = True
             positions_correct = False
             play_game()
-        else:
-            message = "Game Over! You've completed all rounds!"
-
 
 play_game()
 while True:
@@ -610,7 +618,7 @@ while True:
 
     screen.fill((0, 0, 0))
     if 0 <= current_round < len(background_images):
-        current_background = background_images[current_round - 1]
+        current_background = background_images[current_round]
         image_width, image_height = current_background.get_size()
         x_position = (screen_width - image_width) // 2
         y_position = (screen_height - image_height) // 2
