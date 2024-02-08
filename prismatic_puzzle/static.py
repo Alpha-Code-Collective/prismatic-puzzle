@@ -139,7 +139,14 @@ CLUES = [
 ]
 default_positions = [
     # Round 1
-    {"Coral": (1, 2), "Emerald": (0, 0), "Cobalt": (2, 2)},
+    {
+        "Emerald": (0, 0),
+        "Cobalt": (2, 2),
+        "Mustard": (3, 1),
+        "Orange": (1, 1),
+        "Purple": (3, 0),
+        "White": (0, 2),
+    },
     # round 2
     {
         "Grey": (1, 1),
@@ -211,11 +218,7 @@ default_positions = [
     # round 11
     {},
     # round 12
-    {
-        "Coral": (0, 1), 
-        "Mint": (0, 2), 
-        "White": (2, 1)
-    },
+    {"Coral": (0, 1), "Mint": (0, 2), "White": (2, 1)},
     # round 13
     {
         "Teal": (3, 1),
@@ -225,19 +228,12 @@ default_positions = [
         "Grey": (1, 0),
         "Purple": (2, 1),
         "Brown": (1, 2),
-        "Orange": (1,1)
+        "Orange": (1, 1),
     },
     # round 14
-    {
-        "Emerald": (0, 0),
-        "Purple": (1, 2)
-    },
+    {"Emerald": (0, 0), "Purple": (1, 2)},
     # round 15
-    {
-        "Mustard": (3, 0),
-        "White": (2, 1),
-        "Grey": (0, 2)
-    }
+    {"Mustard": (3, 0), "White": (2, 1), "Grey": (0, 2)},
 ]
 
 
