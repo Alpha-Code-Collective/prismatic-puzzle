@@ -542,7 +542,7 @@ while True:
             if start_game_button_rect.collidepoint(event.pos):
                 menu_visible = False  # Hide the menu only if "Start Game" is clicked
                 start_game = True
-            elif quit_button_rect.collidepoint(event.pos):  # Check if the quit button was clicked
+            elif not start_game and quit_button_rect.collidepoint(event.pos):  # Check if the quit button was clicked and game hasn't started
                 pygame.quit()
                 exit()
                 
