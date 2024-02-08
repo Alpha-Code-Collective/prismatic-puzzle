@@ -31,7 +31,8 @@ pause_text = play_font.render("⏸", True, (255, 255, 255))
 title_font = pygame.freetype.SysFont("Arial", 36)
 button_font = pygame.freetype.SysFont("Arial", 24)
 clue_font = pygame.freetype.SysFont("Arial", 24, bold= True)
-button_color = (0, 150, 0)
+button_color = (70, 73, 242)
+
 # Background Image
 background_images = [
     pygame.image.load('prismatic_puzzle/assets/background1.jpg').convert_alpha(),
@@ -54,6 +55,7 @@ check_button_y = 125  # Updated for clarity, providing more space between button
 next_round_button_y = 185  # Updated for clarity
 rules_button_y = 25
 # Buttons
+
 #---Round Buttons
 start_button_rect = pygame.Rect(
     button_x, start_button_y, button_width, 50)  # "Start" button
@@ -62,6 +64,7 @@ check_button_rect = pygame.Rect(
 next_round_button_rect = pygame.Rect(
     button_x, next_round_button_y, button_width, 50)  # "Next Round" button
 rules_button_rect = pygame.Rect(button_x, rules_button_y, button_width, 50)
+border_rect = rules_button_rect.inflate(8,8)
 #---Undo Buttons
 undo_button_rect = pygame.Rect(button_x + 300, 250, 100, 50)
 reset_button_rect = pygame.Rect(button_x + 300, 350, 100, 50)
@@ -303,15 +306,22 @@ def draw_grid(surface):
             pygame.draw.rect(surface, (255, 255, 255), rect, 3)
 
 def draw_buttons(surface):
-    def draw_button(rect, text, is_active):
-        pygame.draw.rect(surface, button_color, rect, 0, 5)
-        text_surf = button_font.render(
-            text, fgcolor=(255, 255, 255), size=24)[0]
-        text_rect = text_surf.get_rect(center=rect.center)
-        # If the button is active and mouse is hovered, simulate hover effect
-        if is_active and rect.collidepoint(pygame.mouse.get_pos()):
-            pygame.draw.rect(surface, (0, 180, 0), rect, 0, 5)
+    def draw_button(rect, text, is_active, border_thickness=1.5, border_color=(237, 218, 69)):
+        # Calculate the border rect by inflating the original rect
+        border_rect = rect.inflate(border_thickness * 2, border_thickness * 2)
 
+        # Determine button color based on hover state
+        button_inner_color = (0, 180, 0) if is_active and rect.collidepoint(pygame.mouse.get_pos()) else button_color
+
+        # Draw the border rect first
+        pygame.draw.rect(surface, border_color, border_rect, 0, 7)  # Adjust the corner radius if needed
+
+        # Then draw the button rect over it with the color determined by hover state
+        pygame.draw.rect(surface, button_inner_color, rect, 0, 7)
+
+        # Render the button text
+        text_surf = button_font.render(text, fgcolor=(255, 255, 255), size=24)[0]
+        text_rect = text_surf.get_rect(center=rect.center)
         surface.blit(text_surf, text_rect)
 
     if start_game and not positions_correct:
