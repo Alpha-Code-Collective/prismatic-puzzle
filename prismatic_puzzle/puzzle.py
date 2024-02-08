@@ -107,6 +107,7 @@ positions_correct = False  # Flag to indicate if the cube positions are correct
 current_round = 0
 message = ""
 
+
 # Adjust position and size as needed
 start_game_button_rect = pygame.Rect(500, 500, 200, 50)
 
@@ -538,6 +539,10 @@ def handle_game_logic(event):
             start_game = True
             positions_correct = False
             play_game()
+        elif current_round == 14:
+            current_round = 0
+            start_game = True
+            positions_correct = False
 
 play_game()
 while True:
