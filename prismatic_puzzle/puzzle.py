@@ -6,8 +6,8 @@ from sys import exit
 import os
 
 # The .static is for Windows users
-from .static import COLORS, CLUES, rounds_correct_positions, default_positions
-from .solution_logic import check_cubes_position
+from static import COLORS, CLUES, rounds_correct_positions, default_positions
+from solution_logic import check_cubes_position
 
 pygame.init()
 screen_width, screen_height = 1200, 1000
